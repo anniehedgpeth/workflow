@@ -5,7 +5,7 @@
 ### Daily
 1. Exercism.io (pm/M)
 2. InSpec Ubuntu profile and remediation in Chef (1-2 controls)
-3. Networking & Conference
+3. Networking & Conference planning
 
 ### Projects
 1. Compliance POC
