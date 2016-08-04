@@ -23,7 +23,7 @@ The next thing I need to do is set up a line of communication between my the nod
 # Install and upload policy to Chef server
 When I install a Policyfile in a cookbook, I'm then able to tell it all of the other cookbooks that I want to run at the same time and where to find them. So then the Chef server knows which cookbooks to put on which nodes because the nodes tell it which policy they have. 
 
-1. On your command line, remove the `Policyfile.lock.json` file if it exists
+1. On your command line, from your cookbook directory, remove the `Policyfile.lock.json` file if it exists
 2. Run `chef install` inside of the particular cookbook folder in which the Policyfile.rb is located.
 3. Run `chef push <policyGroup> Policyfile.rb`
 4. `chef show-policy` to show the active policies for each group. The ID it uses should match the ID inside of the json file.
