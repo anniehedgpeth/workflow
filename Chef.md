@@ -37,3 +37,5 @@ When I'm converging a node, I'm basically running the chef-client command which 
 
 # Scan for compliance errors on Compliance server
 After I've converged the node(s), then I want to scan them so that I can see what, if anything, still needs to be remediated. 
+
+[Tour of Chef Compliance](http://www.anniehedgie.com/tour-of-chef-compliance)
