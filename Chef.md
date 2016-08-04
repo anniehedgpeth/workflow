@@ -23,19 +23,23 @@ The next thing I need to do is set up a line of communication between my the nod
 # Install and upload policy to Chef server
 When I install a Policyfile in a cookbook, I'm then able to tell it all of the other cookbooks that I want to run at the same time and where to find them. So then the Chef server knows which cookbooks to put on which nodes because the nodes tell it which policy they have. 
 
-1. On your command line, from your cookbook directory in which the Policyfile.rb is located, remove the `Policyfile.lock.json` file if it exists `rm Policyfile.lock.json`
-2. Run `chef install`
-3. Run `chef show-policy` to get the Policy Group name as it shows the active policies for each group
-4. Run `chef push <policyGroup> Policyfile.rb`
-5. Run `chef show-policy` again to show the active policies for each group. The ID it uses should match the ID inside of the json file.
-6. Commit to Git so that you can have a history of the json for every time you do this 
+1. Update your version number on the cookbook and push to Git.
+2. On your command line, from your cookbook directory in which the Policyfile.rb is located, remove the `Policyfile.lock.json` file if it exists `rm Policyfile.lock.json`
+3. Run `chef install`
+4. Run `chef show-policy` to get the Policy Group name as it shows the active policies for each group
+5. Run `chef push <policyGroup> Policyfile.rb`
+6. Run `chef show-policy` again to show the active policies for each group. The ID it uses should match the ID inside of the json file.
+7. Commit to Git so that you can have a history of the json for every time you do this 
 
 # Converge the node
 When I'm converging a node, I'm basically running the chef-client command which runs all of the recipes and cookbooks that are in the Policyfile on the node(s). 
 
-1. In an ssh session to the node run `sudo chef-client`
+- In an ssh session to the node run `sudo chef-client`
 
 # Scan for compliance errors on Compliance server
 After I've converged the node(s), then I want to scan them so that I can see what, if anything, still needs to be remediated. 
 
 [Tour of Chef Compliance](http://www.anniehedgie.com/tour-of-chef-compliance)
+
+1. Update your version number on your profile.
+2. Upload the latest version of your profile. (zip and upload)
