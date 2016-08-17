@@ -11,3 +11,6 @@
 ## Update version in metatdata.rb
 
 ## Commit and Push to Github
+
+# Now put this version into production
+ - go to Chef workflow #2 on "Install and upload policy to Chef server" to deploy
