@@ -1,3 +1,10 @@
+# To Make a New Cookbook
+ - Create a new repo in Github and copy the link
+ - From the terminal, navigate to the cookbooks directory in my chef_repo directory and run
+ `git clone <link>`
+ - Now run `chef generate cookbook`
+
+
 # Before Uploading Policy to Chef Server...
 
 ## Code changes for hardening cookbook
