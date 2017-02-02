@@ -22,3 +22,20 @@ Here's a good link for [branching and committing](https://github.com/Kunena/Kune
 
 # Now put this version into production
  - go to Chef workflow #2 on "Install and upload policy to Chef server" to deploy
+
+***********************
+
+Any time I change the cookbook, from that cookbook’s directory, I need to:
+bump the version in `metadata.rb`
+ - (you would normally automate that in Jenkins)
+`berks install`
+`berks upload`
+
+To bootstrap a new machine:
+`knife bootstrap cheftraining.southcentralus.cloudapp.azure.com -x annie -i ~/.ssh/id_rsa --sudo -N cheftraining`
+
+To converge on that node from here on out:
+run `chef-client` in an ssh session
+
+To add run-list:
+`knife node run_list set cheftraining 'recipe[cheftraining::default]'`
