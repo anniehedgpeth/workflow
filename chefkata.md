@@ -14,18 +14,24 @@
 
 
 Any time I change the cookbook, from that cookbook’s directory, I need to:
-bump the version in `metadata.rb`
+ - bump the version in `metadata.rb` or it won't upload the new one
  - (you would normally automate that in Jenkins)
 `berks install`
 `berks upload`
 
 # To bootstrap a new machine:
 
-`knife bootstrap chefkata4.southcentralus.cloudapp.azure.com -N chefkata4 -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' --ssh-user annie --sudo`
+`knife bootstrap chefkata5.southcentralus.cloudapp.azure.com -N chefkata5 -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' --ssh-user annie --sudo`
 
 # To converge on that node from here on out:
 
 run `sudo chef-client` in an ssh session
+
+# To validate with InSpec Profile
+First you have to add your private key to the local ssh (I don't know if it matters which directory you're in.)
+`ssh-add`
+`ssh annie@chefkata5.southcentralus.cloudapp.azure.com`
+`inspec exec https://github.com/anniehedgpeth/chefkata_inspec -t ssh://annie@chefkata5.southcentralus.cloudapp.azure.com`
 
 # To add run-list:
 
@@ -57,7 +63,7 @@ knife search node "builder:Annie"
  - data_bags directory is in the chef_repo sibling to cookbooks directory
  - each data bag is a folder and each data_bag item is a .json file within that folder
  - the data_bag item is just a .json file of all of settings for that data_bag item
-   - must include "id":"<databagitemname>"
+   - must include `{ "id":"<data_bag_item_name>" }`
  - upload data_bag item to chef server so that you can use it in your cookbook
    - run this from the top of the chef repo directory `knife data bag from file BAG_NAME ITEM_NAME.json`
    - `knife data bag from file website messages.json`
@@ -66,8 +72,20 @@ knife search node "builder:Annie"
  - Verify that it's there from command line 
   - `knife data bag list`
 
-# Using data bags in the recipe
+## Using data bags in the recipe
  - First we accessing the data from that item
  `messages = data_bag_item('website', 'messages')`
  - Then we're calling the specific data element from that item 
  `message = messages['welcomeMessage']`
+ - Then call it in the recipe like `content message`
+
+## Using data bags in test kitchen
+So kitchen can't look inside the "real" data bags directory, so you have to set up a dummy data bags directory just for test kitchen.
+ - Create cookbooks/thiscookbook/test/integration/data_bags and copy your real data bag directory into that
+ - Then edit the .kitchen.yml
+
+```yaml
+suites:
+ - name: default
+   data_bags_path: "test/integration/data_bags"
+```
