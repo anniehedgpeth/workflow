@@ -67,6 +67,7 @@ knife search node "builder:Annie"
  - upload data_bag item to chef server so that you can use it in your cookbook
    - run this from the top of the chef repo directory `knife data bag from file BAG_NAME ITEM_NAME.json`
    - `knife data bag from file website messages.json`
+   - It's the same command to update the data bag if you edit it
  - Verify that it's there in UI 
    - Policy > Data Bags > name
  - Verify that it's there from command line 
