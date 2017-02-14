@@ -31,11 +31,31 @@ bump the version in `metadata.rb`
 `berks install`
 `berks upload`
 
-To bootstrap a new machine:
-`knife bootstrap cheftraining.southcentralus.cloudapp.azure.com -x annie -i ~/.ssh/id_rsa --sudo -N cheftraining`
+# To bootstrap a new machine:
 
-To converge on that node from here on out:
-run `chef-client` in an ssh session
+`knife bootstrap chefkata3.southcentralus.cloudapp.azure.com -N chefkata3 -r 'recipe[chefkata::default], recipe[ubuntu14-hardening::default]' --ssh-user annie --sudo`
 
-To add run-list:
-`knife node run_list set cheftraining 'recipe[cheftraining::default]'`
+# To converge on that node from here on out:
+
+run `sudo chef-client` in an ssh session
+
+# To add run-list:
+
+`knife node run_list set chefkata2 'recipe[chefkata::default]'`
+
+# To edit the run-list:
+
+ - make sure the cookbook is uploaded
+ - make sure it has a `Berksfile`
+ - `berks install`
+ - `berks upload`
+ - `knife node run_list add chefkata2 'ubuntu-14-hardening'`
+
+# When adding an organization to manage.chef.io
+ - add the org
+ - reset user key
+generate knife config from UI
+copy the user key into .chef folder
+create a new org key and download knife.rb
+see if your user needs a new key
+`knife node list`
