@@ -21,7 +21,7 @@ Any time I change the cookbook, from that cookbook’s directory, I need to:
 
 # To bootstrap a new machine:
 
-`knife bootstrap chefkata5.southcentralus.cloudapp.azure.com -N chefkata5 -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' --ssh-user annie --sudo`
+`knife bootstrap chefkata6.southcentralus.cloudapp.azure.com -N chefkata6 -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' --ssh-user annie --sudo`
 
 # To converge on that node from here on out:
 
@@ -30,8 +30,8 @@ run `sudo chef-client` in an ssh session
 # To validate with InSpec Profile
 First you have to add your private key to the local ssh (I don't know if it matters which directory you're in.)
 `ssh-add`
-`ssh annie@chefkata5.southcentralus.cloudapp.azure.com`
-`inspec exec https://github.com/anniehedgpeth/chefkata_inspec -t ssh://annie@chefkata5.southcentralus.cloudapp.azure.com`
+`ssh annie@chefkata6.southcentralus.cloudapp.azure.com`
+`inspec exec https://github.com/anniehedgpeth/chefkata_inspec -t ssh://annie@chefkata6.southcentralus.cloudapp.azure.com`
 
 # To add run-list:
 
@@ -65,6 +65,8 @@ knife search node "builder:Annie"
  - the data_bag item is just a .json file of all of settings for that data_bag item
    - must include `{ "id":"<data_bag_item_name>" }`
  - upload data_bag item to chef server so that you can use it in your cookbook
+   - first create the bag on the server
+    - `knife data bag create website message.json`
    - run this from the top of the chef repo directory `knife data bag from file BAG_NAME ITEM_NAME.json`
    - `knife data bag from file website messages.json`
    - It's the same command to update the data bag if you edit it
@@ -74,7 +76,7 @@ knife search node "builder:Annie"
   - `knife data bag list`
 
 ## Using data bags in the recipe
- - First we accessing the data from that item
+ - First we access the data from that item
  `messages = data_bag_item('website', 'messages')`
  - Then we're calling the specific data element from that item 
  `message = messages['welcomeMessage']`
