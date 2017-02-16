@@ -21,7 +21,9 @@ Any time I change the cookbook, from that cookbook’s directory, I need to:
 
 # To bootstrap a new machine:
 
-`knife bootstrap chefkata6.southcentralus.cloudapp.azure.com -N chefkata6 -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' --ssh-user annie --sudo`
+`knife bootstrap chefkata7.southcentralus.cloudapp.azure.com -N chefkata7 -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' --ssh-user annie --sudo`
+
+`knife bootstrap chefkata7prod.southcentralus.cloudapp.azure.com -N chefkata7prod -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' -E 'prod' --ssh-user annie --sudo`
 
 # To converge on that node from here on out:
 
@@ -30,15 +32,15 @@ run `sudo chef-client` in an ssh session
 # To validate with InSpec Profile
 First you have to add your private key to the local ssh (I don't know if it matters which directory you're in.)
 `ssh-add`
-`ssh annie@chefkata6.southcentralus.cloudapp.azure.com`
-`inspec exec https://github.com/anniehedgpeth/chefkata_inspec -t ssh://annie@chefkata6.southcentralus.cloudapp.azure.com`
+`ssh annie@chefkata7.southcentralus.cloudapp.azure.com`
+`inspec exec https://github.com/anniehedgpeth/chefkata_inspec -t ssh://annie@chefkata7.southcentralus.cloudapp.azure.com`
 
 # To add run-list:
 
 `knife node run_list set chefkata2 'recipe[chefkata::default]'`
 
 # To edit the run-list:
-
+ - `knife node show chefkata6`
  - make sure the cookbook is uploaded
  - make sure it has a `Berksfile`
  - `berks install`
@@ -66,7 +68,7 @@ knife search node "builder:Annie"
    - must include `{ "id":"<data_bag_item_name>" }`
  - upload data_bag item to chef server so that you can use it in your cookbook
    - first create the bag on the server
-    - `knife data bag create website message.json`
+    - `knife data bag create website messages.json`
    - run this from the top of the chef repo directory `knife data bag from file BAG_NAME ITEM_NAME.json`
    - `knife data bag from file website messages.json`
    - It's the same command to update the data bag if you edit it
@@ -92,3 +94,12 @@ suites:
  - name: default
    data_bags_path: "test/integration/data_bags"
 ```
+
+## Roles
+Roles function just like data bags in the sense that they're sibling to the cookbooks directory, you have to upload them separately to the chef server, and they have their own attributes. They also have their own run-lists.
+ - to upload to chef server
+`knife role from file roles/security.json`
+ - to check 
+ `knife role list`
+ - to add the role to the runlist
+ `knife node run_list add chefkata7 'role[security]'`
