@@ -123,7 +123,7 @@ How to use '--local-mode'
  - `chef_zero` would be the provisioner, and you'd use local mode if you weren't using a proper Chef server. All of the data would be accessed from 
 
 How the Chef client and the Chef server communicate
- - The node on which Chef client is installed has a client.rb file which contains a link and credentials to access the Chef server. The Chef server never accesses the Chef client; it merely holds the data that the client will need to access.
+ - The node on which Chef client is installed has a client.rb file which contains a link and credentials to access the Chef server. The Chef server never accesses the Chef client; it merely holds the data that the client will need to access. The Chef client communicates to the Chef server over https (port 443) or http (port 80).
 
 The Chef client configuration
  - The client is configures the node that it is on based on the run-list it is given during the bootstrap or knife commands.
@@ -300,17 +300,17 @@ Tools packaged in Chef DK
 ## TEST KITCHEN
 *Candidates	should understand:*
 
-The Test Kitchen value proposition						
- - Test Kitchen is at the heart of TDD within Chef. Being able to test your configuration before changing the state of your machine is invaluable. 
+The Test Kitchen value proposition
+ - Test Kitchen is at the heart of TDD within Chef. Being able to test your configuration before changing the state of your machine is invaluable because you can configure the state of a throw-away machine without having to change your actual infrastructure.
 
 What TDD is
  - Test Driven Development is....
 
 The platforms supported by Test Kitchen
- -
+ - Linux and Windows
 
 How to include Test Kitchen in a pipeline
- - 
+ - You can add `kitchen test` into your pipeline, and it will run through the entire Kitchen cycle (create, converge, verify, destroy). If it does not pass, then you can halt your build or promote if it passes.
 
 Basic `kitchen` commands
  - `kitchen create`
@@ -337,27 +337,66 @@ Basic `kitchen` configuration
 
 **The Chef Automate features**
 What the workflow feature is and how it affects productivity
+ - 
+ 
 What the compliance feature is and how it affects workflow
+ - 
+ 
 What the visibility feature is and how it affects workflow
+ - 
+ 
 How a private Supermarket fits into a workflow
+ - 
+ 
 The Chef Automate open source components
+ - 
+ 
 What Visibility is
+ - 
+ 
 What Habitat is
+ - 
+ 
 What InSpec is
+ - 
+ 
 What Chef Compliance is
+ - 
+ 
 
 ## END-TO-END WORKFLOW
 *Candidates	should	understand:*
+
 How all Chef products, features and technologies fit together
+ - 
+ 
 The workflow scope
+ - 
+ 
 The compliance scope
+ - 
+ 
 The Chef Automate scope
+ - 
+ 
 How Chef Automate enhances DevOps behaviors
+ - 
+ 
 The aspects of Chef that are relevant to security and compliance teams
+ - 
+ 
 The aspects of Chef that are relevant to development teams
+ - 
+ 
 The aspects of Chef that are relevant to operations teams
+ - 
+ 
 The aspects of Chef that are relevant to change	advisory boards
+ - 
+ 
 How Chef enforces consistency across infrastructure
+ - 
+ 
 
 ## DESIGN PHILOSOPHY
 CHEF IS WRITTEN IN RUBY
@@ -387,52 +426,123 @@ What it means to roll back infrastructure
 What happens if you reverse the order of resources in a recipe
  - Resources are executed in the order 
 
-If	Chef	can	automaically	detect	what	patches	should	be	applied	to a system
-PUSH	VS. PULL
-Candidates	should	understand:
-The	difference	between	push	and	pull	models						
-The	benefits	of	a	pull	model	
-When a push	model	is	appropriate						
-What	firewall	rules	need	to	be	enabled for	Chef client	
-The	Chef client	converge	intervals	and	how	to	invoke immediate	updates	
-Basic	Chef	Fluency Page	5 v1.0.2
-RECOMMENDED	WORKFLOWS
-Candidates	should	understand:
-What	wrapper	cookbooks are
-How	to	use source	control,	e.g.	GitHub
-How	to	use	the	TDD	approach
-CHEF	WORKFLOW	BASICS		
-CONTINUOUS	DELIVERY
-Candidates	should	understand:
-What	continuous	delivery (CD)	is
-What	role	Chef	plays	in	CD						
-When	to	run	tests	
-Why	automated	configuration	management	is	critical	to	CD						
-Why	CD	is	*more*	secure	than	manual	processes		
-USING	COMPLIANCE	TO	SCAN
-Candidates	should	understand:
-The	benefits	of	the	agentless	nature	of	Chef	compliance						
-How	to	check	for	compliance	on	nodes	that	don't	have	the	Chef	client	installed
-Basic	use	cases	for	compliance	
-What	language	is	used	to	express	compliance	requirements
-USING	CHEF DK TO	TEST	YOUR	CHANGES
-Candidates	should	understand:
-The	Test	Kitchen	value	proposition		
+[If Chef can automatically detect what patches should be applied to a system](https://blog.chef.io/2017/01/05/patch-management-system-using-chef-automate/)
+ - Yes and no. 
+   1) Identify which patches are required
+   2) Apply and evaluate the patches in a testing environment
+   3) Distribute the patches to the rest of the fleet
+   4) Confirm the patches have been applied successfully with InSpec
+
+# PUSH VS. PULL
+*Candidates should understand:*
+
+The difference between push and pull models
+ - A push approach would be if the node that was being configured was idle while the server pushed a policy of configuration desired state to the node. This would mean that there is nothing additional being installed on the node being configured, only what is in the policy. A pull approach is what Chef employs, which means that the Chef server is idle while the client that is installed on the node being configured pulls the necessary data from the Chef server that it needs to complete its configuration given to it through a bootstrapping process.
+
+The benefits of a pull model
+ - The major benefit of a pull model is scalability. The server that houses the data needed for configuration is not strained trying to configure all of the nodes. Instead the client installed on the node does the configuration itself.
+
+When a push model is appropriate
+ - When you need to run a job independently of a `chef-client` run, a push job may be appropriate. This will allow you to send a job to a node independently of the client. 
+
+What firewall rules need to be enabled for Chef client
+ - The Chef client communicates to the Chef server over https (port 443) or http (port 80).
+
+The Chef client converge intervals and how to invoke immediate updates
+ - 
+
+# RECOMMENDED WORKFLOWS
+*Candidates should understand:*
+
+What wrapper cookbooks are
+ - A wrapper cookbook is the main cookbook that you write that you include dependent cookbooks inside that don't contain all of the functionality that you need. The wrapper would extend the dependent cookbook to include the additional functionality that you need.
+
+How to use source control, e.g. GitHub
+ - Storing your repos and cookbooks in source control, such as GitHub, allows you to collaborate with others on development as well as branch, fork, and promote.
+
+How to use the TDD approach
+ - TDD allows you to develop based on red/green/refactor. You first test for the desired state, and when it fails you write the desired state in your recipe. You then test again, and it passes. This is done with Test Kitchen.
+
+# CHEF WORKFLOW BASICS
+
+## CONTINUOUS DELIVERY
+*Candidates should understand:*
+
+What continuous delivery (CD) is
+ - Continuous delivery is a software engineering approach in which teams produce software in short cycles, ensuring that the software can be reliably released at any time. It aims at building, testing, and releasing software faster and more frequently. (Wikipedia)
+
+What role Chef plays in CD		
+ - Chef allows for TDD with Test Kitchen, which produces reliability. And storing in source control makes it easier to develop collaboratively, leading to faster releases as the most reliable and stable branches are promoted through the environments. 
+
+When to run tests
+ - Tests should be run every time a change is made or the node is converged.
+
+Why automated configuration management is critical to CD
+ - Uniformity through automation minimizes error.
+
+Why CD is *more* secure than manual processes
+ - Removing the risk of human error, you can see your infrastructure and compliance as code, seeing its state in code before it is actually changed.
+
+# USING	COMPLIANCE TO SCAN
+*Candidates should understand:*
+
+The benefits of the agentless nature of Chef compliance
+ - A test is more reliable if nothing is installed on the node being installed because you don't have to change the state of the node being tested; you merely have to inspect it.
+
+How to check for compliance on nodes that don't have the Chef client installed
+ - You simply need to be able to have remote access into the node in order for the InSpec framework to use your profile to scan the node being inspected.
+
+Basic use cases for compliance
+ - Regulatory security and compliance standards
+ - Configuration validation
+ - State discovery 
+
+What language is used to express compliance requirements
+ - InSpec
+
+# USING CHEF DK TO TEST YOUR CHANGES
+*Candidates should understand:*
+
+The Test Kitchen value proposition
+ - Test Kitchen is at the heart of TDD within Chef. Being able to test your configuration before changing the state of your machine is invaluable because you can configure the state of a throw-away machine without having to change your actual infrastructure.
+
 Basic	use	cases	for	Chef DK	
-PUBLISHING	ARTIFACTS	TO	CHEF	SERVER	AND SUPERMARKET
-Candidates	should	understand:
-How	to	publish	artifacts	to	Chef	server	
-What	Berkshelf is						
-If	the	Chef	Automate	workflow	feature	can	push	artifacts	to	things	other	than	a	Chef	server	or	
-Supermarket						
-How	to	manage cookbook	dependencies	
-UNDERSTANDING	BASIC	CHEF	CODE		
-APPROACHABLE	CUSTOM	CODE
-Candidates	should	understand:
-How	to	recognizing custom	code
-How	to	use libraries
-How	to	customize	Chef
-APPROACHABLE	CHEF	CODE
-Candidates	should	understand:
-Basic	Chef	Fluency Page	6 v1.0.2
-How	to	read	a	recipe	that	includes	the 'package',	'file', and 'service'	resources	and	describe	its	intent.	
+ - cookbook development (as well as other node data such as roles and environments)
+ - bootstrapping nodes with the Chef client
+ - communicating with the Chef server
+
+# PUBLISHING ARTIFACTS TO CHEF SERVER AND SUPERMARKET
+*Candidates should understand:*
+
+How to publish artifacts to Chef server
+ - 
+
+What Berkshelf is
+ - 
+
+If the Chef Automate workflow feature can push artifacts to things other than a Chef server or Supermarket
+ - 
+
+How to manage cookbook dependencies
+ - 
+
+# UNDERSTANDING BASIC CHEF CODE
+
+## APPROACHABLE CUSTOM CODE
+*Candidates should understand:*
+
+How to recognizing custom code
+ - 
+
+How to use libraries
+ - 
+
+How to customize Chef
+ - 
+
+## APPROACHABLE CHEF CODE
+*Candidates should understand:*
+
+How to read a recipe that includes the 'package', 'file', and 'service' resources and describe its intent.
+ - 
+
