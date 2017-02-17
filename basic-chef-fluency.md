@@ -117,7 +117,7 @@ The function of Chef client vs the function of Chef server
  - While the client is installed on the nodes being configured, the server stores the necessary configuration information for the client to access.
 
 What 'why-run' is
-??? - like `terraform plan`
+ - The `--why-run` command is similar to Terraform's `terraform plan` command. It tells you what would happen and change if you were to converge. It does run the executable, but it doesn't actually modify the system.
 
 How to use '--local-mode'
  - `chef_zero` would be the provisioner, and you'd use local mode if you weren't using a proper Chef server. All of the data would be accessed from 
@@ -282,23 +282,56 @@ If the items in Supermarket are free or cost money
 
 ## CHEF DK
 *Candidates	should	understand:*
+
 The	Chef DK	value	proposition						
-Specific	features	of	test-driven	development	(TDD)
-Tools	packaged	in	Chef DK	
+ - When the Chef DK is installed on your workstation, you're able to develop with Chef and therefor able to completely configure your infrastructure. 
+
+Specific features of test-driven development (TDD)
+ - TDD allows you to develop based on red/green/refactor. You first test for the desired state, and when it fails you write the desired state in your recipe. You then test again, and it passes.
+
+Tools packaged in Chef DK
+ - Chef-client and OHAI
+ - Chef CLI
+ - InSpec / ChefSpec / Cookstyle / Foodcritic
+ - Chef provisioning
+ - Knife / Berks / Spork
+ - Test Kitchen
 
 ## TEST KITCHEN
 *Candidates	should understand:*
+
 The Test Kitchen value proposition						
+ - Test Kitchen is at the heart of TDD within Chef. Being able to test your configuration before changing the state of your machine is invaluable. 
+
 What TDD is
  - Test Driven Development is....
-The platforms supported by Test Kitchen
-How to include Test Kitchen in a pipeline
-Basic `kitchen` commands
-Basic `kitchen` configuration
 
-# DESCRIBING WHAT CHEF IS		
+The platforms supported by Test Kitchen
+ -
+
+How to include Test Kitchen in a pipeline
+ - 
+
+Basic `kitchen` commands
+ - `kitchen create`
+ - `kitchen converge`
+ - `kitchen login`
+ - `kitchen verify`
+ - `kitchen destroy`
+ - `kitchen test`
+ 
+Basic `kitchen` configuration
+ - Driver - What is creating your VM?
+ - Provisioner - What is running Chef?
+ - Verifier - What is running the tests? (probably InSpec)
+ - Transport - What are you using to remote to a machine?
+ - Suites - What are the machines are you making?
+ - Platform - What OS are you using?
+
+# DESCRIBING WHAT CHEF IS
 ## PRODUCTS AND FEATURES
 *Candidates should understand:*
+
 [**The	Chef	Automate	value	proposition**](https://www.chef.io/automate/)
  - "Effective cross-team collaboration" Chef Automate tracks and tests dependencies between projects and teams. Deploy safely, even in a multi-team, multi-project environment where there are complex interdependencies.
 
@@ -329,16 +362,32 @@ How Chef enforces consistency across infrastructure
 ## DESIGN PHILOSOPHY
 CHEF IS WRITTEN IN RUBY
 *Candidates should understand:*
-How	Chef	uses a	Ruby-based	DSL						
-How	to	use raw	Ruby	to	extend	Chef	
-What	a	library is
-EXPLICIT	ACTIONS
-Candidates	should	understand:
-How	Chef	uses	explicit	actions	and	only does	what	you	tell	it	to						
-Actions	for common	resources	such	as	the	:nothing	action
-What	it	means	to	roll	back	infrastructure
-What	happens	if	you	reverse	the	order	of	resources	in	a	recipe						
-If	Chef	can	automagically	detect	what	patches	should	be	applied	to a system
+
+How Chef uses a Ruby-based DSL
+ - Chef is a thin domain-specific-language, meaning that it was built on top of Ruby. This means that you're able to easily customize with Ruby.
+
+How to use raw Ruby to extend Chef
+ - If you'd ike to customize your cookbook, you can use raw Ruby anywhere in the cookbook.
+
+What a library is
+ - Ruby code can be stored in a cookbook's `libraries` directory and can be implemented anywhere in the cookbook.
+
+## EXPLICIT ACTIONS
+*Candidates should understand:*
+
+How Chef uses explicit actions and only does what you tell it to
+ - You must state explicitly what you want Chef to do in your configuration.
+
+Actions for common resources such as the :nothing action
+ - Common actions include :nothing, :create, :sync, :delete, :run, :start, :restart, :stop, :status, etc.
+
+What it means to roll back infrastructure
+ - Rolling back would be to undo the configuration changes made to your infrastructure. This is not best practice with Chef, as you're only allowed to roll forward due to the nature of idempotency. You would need to first change your recipe to intentionally undo the changes to the infrastructure that you wanted to "roll back". Then you'd redefine the desired state in your recipe and instill those changes by converging again.
+
+What happens if you reverse the order of resources in a recipe
+ - Resources are executed in the order 
+
+If	Chef	can	automaically	detect	what	patches	should	be	applied	to a system
 PUSH	VS. PULL
 Candidates	should	understand:
 The	difference	between	push	and	pull	models						
