@@ -1,6 +1,6 @@
 # Study Sheet for Basic	Chef Fluency
 
-[## BASIC CHEF FLUENCY	BADGE	TOPICS](https://training.chef.io/static/Basic_Chef_Fluency_Badge_Scope.pdf)
+## [BASIC CHEF FLUENCY BADGE TOPICS](https://training.chef.io/static/Basic_Chef_Fluency_Badge_Scope.pdf)
 
 **The	Basic	Chef Fluency badge is	awarded	when someone proves	that they	understand the core	elements that	underpin Chef. Candidates	must show:**
 
@@ -419,6 +419,7 @@ How Chef enforces consistency across infrastructure
 
 ## DESIGN PHILOSOPHY
 CHEF IS WRITTEN IN RUBY
+
 *Candidates should understand:*
 
 How Chef uses a Ruby-based DSL
