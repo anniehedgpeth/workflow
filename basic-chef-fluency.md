@@ -102,7 +102,7 @@ What a databag is
  - A databag is a directory of data that is stored on the Chef server.
 
 How to use search for dynamic orchestration
-??? - 
+ - You would use the `knife search` command to get a list of nodes on which you need to perform actions.
 
 How to invoke a search from the command line
  - `knife search node  "<index>:<search_query>"`
@@ -168,13 +168,13 @@ How to look up run_lists
  - You may find a node's run_list in 3 ways:
   1) Look in the UI under Nodes > Details > Run List.
   2) Run `knife node show <nodename>`
-???  3) In the node, look at the `client.rb` file.
+  3) In the node, look at the `client.rb` file.
 
 How to set and change run_lists
  - You can set and change run_lists in much the same way that you can view them.
   1) Look in the UI under Nodes > Details > Run List > Edit.
   2) After you've insured that your desired cookbooks are uploaded to the Chef server, run `knife node run_list add <nodename> 'recipe[<cookbookname>::<recipe>]'` OR `knife node run_list add chefkata7 'role[security]'`
-???  3) In the node, look at the `client.rb` file.
+  3) In the node, look at the `client.rb` file (not best practice).
 
 ## ROLES
 *Candidates should understand:*
@@ -242,7 +242,7 @@ The reasons for defining infrastructure as code
  - simplicity and flexibility for managing and provisioning infrastructure
 
 The difference between rolling back and rolling forward
- - Rolling back would be to undo the configuration changes made to your infrastructure. This is not best practice with Chef, as you're only allowed to roll forward due to the nature of idempotency. You would need to first change your recipe to intentionally undo the changes to the infrastructure that you wanted to "roll back". Then you'd redefine the desired state in your recipe and instill those changes by converging again.
+ - Rolling back would be to undo the configuration changes made to your infrastructure. This is not best practice with Chef, as you're only allowed to roll back due to the nature of idempotency. You would need to first change your recipe to intentionally undo the changes to the infrastructure that you wanted to "roll back". Then you'd redefine the desired state in your recipe and instill those changes by converging again.
 
 ## DESIRED STATE CONFIGURATION
 *Candidates should understand:*
@@ -287,7 +287,7 @@ The	Chef DK	value	proposition
  - When the Chef DK is installed on your workstation, you're able to develop with Chef and therefor able to completely configure your infrastructure. 
 
 Specific features of test-driven development (TDD)
- - TDD allows you to develop based on red/green/refactor. You first test for the desired state, and when it fails you write the desired state in your recipe. You then test again, and it passes.
+ - Audit > Remediate > Certify - TDD allows you to develop based on red/green/refactor. You first test for the desired state, and when it fails you write the desired state in your recipe. You then test again, and it passes.
 
 Tools packaged in Chef DK
  - Chef-client and OHAI
@@ -304,7 +304,7 @@ The Test Kitchen value proposition
  - Test Kitchen is at the heart of TDD within Chef. Being able to test your configuration before changing the state of your machine is invaluable because you can configure the state of a throw-away machine without having to change your actual infrastructure.
 
 What TDD is
- - Test Driven Development is....
+ - Test Kitchen is at the heart of TDD within Chef. Being able to test your configuration before changing the state of your machine is invaluable because you can configure the state of a throw-away machine without having to change your actual infrastructure.
 
 The platforms supported by Test Kitchen
  - Linux and Windows
@@ -329,74 +329,93 @@ Basic `kitchen` configuration
  - Platform - What OS are you using?
 
 # DESCRIBING WHAT CHEF IS
+
 ## PRODUCTS AND FEATURES
 *Candidates should understand:*
 
-[**The	Chef	Automate	value	proposition**](https://www.chef.io/automate/)
- - "Effective cross-team collaboration" Chef Automate tracks and tests dependencies between projects and teams. Deploy safely, even in a multi-team, multi-project environment where there are complex interdependencies.
+[**The Chef Automate value proposition**](https://www.chef.io/automate/)
+ - "Effective cross-team collaboration" Chef Automate tracks and tests dependencies between projects and teams. Deploy safely, even in a multi-team, multi-project environment where there are complex inter-dependencies.
+   1) Full oversight
+   2) Change management
+   3) Governance
+   4) Built-in compliance  
 
 **The Chef Automate features**
 What the workflow feature is and how it affects productivity
- - 
- 
+ - Workflow is similar to Jenkins or Team City, as it defines and automates the CI/CD pipeline. It affects productivity by promoting the next build in the previous one had passed. You're able to release code faster when the automation process is in charge of promotion. The safeguard of promoting only the builds that pass validation contributes to productivity, as well.
+
 What the compliance feature is and how it affects workflow
- - 
+ - In the same way that workflow adds safeguards which contribute to productivity
  
 What the visibility feature is and how it affects workflow
- - 
+ - It provides insight on how changes affect the state of Chef on the nodes.
  
 How a private Supermarket fits into a workflow
  - 
  
 The Chef Automate open source components
- - 
+ - The open source components of Automate include:
+   1) InSpec
+   2) Chef
+   3) Habitat
  
 What Visibility is
- - 
+ - Visibility is a tool within Chef Automate that allows you to see the state of infrastructure across your entire organization. 
  
 What Habitat is
- - 
+ - Habitat is a tool within Chef Automate for the managing and packaging of applications.
  
 What InSpec is
- - 
+ - InSpec is a framework with which to automate security and compliance tests. 
  
 What Chef Compliance is
- - 
+ - Compliance is the tool created on top of the InSpec framework which integrates within Chef Automate.
  
 
 ## END-TO-END WORKFLOW
 *Candidates	should	understand:*
 
-How all Chef products, features and technologies fit together
- - 
+How all Chef products, features, and technologies fit together
+ - Audit (InSpec/Compliance) > Remediate (Chef/Workflow/Habitat) > Certify (Visibility)
  
 The workflow scope
- - 
+ - Workflow defines and automates the CI/CD pipeline.
  
 The compliance scope
- - 
+ - Compliance defines and automates compliance validation. 
  
 The Chef Automate scope
- - 
- 
+ - Audit (InSpec/Compliance) > Remediate (Chef/Workflow/Habitat) > Certify (Visibility)
+
 How Chef Automate enhances DevOps behaviors
- - 
+ - Audit (InSpec/Compliance) > Remediate (Chef/Workflow/Habitat) > Certify (Visibility); TDD
+- "Effective cross-team collaboration" Chef Automate tracks and tests dependencies between projects and teams. Deploy safely, even in a multi-team, multi-project environment where there are complex inter-dependencies.
+  1) Full oversight
+  2) Change management
+  3) Governance
+  4) Built-in compliance  
  
 The aspects of Chef that are relevant to security and compliance teams
- - 
+ - Cookbooks for hardening and patch management
+ - InSpec and Compliance within Workflow for promotion of safe cookbooks
+ - Visibility for validation of compliance
  
 The aspects of Chef that are relevant to development teams
- - 
+ - Habitat for application packaging
+ - Test Kitchen for TDD
+ - Workflow for promotion of code through the pipeline
  
 The aspects of Chef that are relevant to operations teams
- - 
+ - Compliance for health checks
+ - Chef for infrastructure as code
+ - Visibility for state of affairs
  
 The aspects of Chef that are relevant to change	advisory boards
- - 
+ - Visibility for state of affairs to assess risk of change and to verify the reliability of a version from a previous environment
+ - Workflow for approval process
  
 How Chef enforces consistency across infrastructure
- - 
- 
+ - Chef enforces consistency across infrastructure by having roles and environments, and Workflow helps to ensure that changes are consistently applied.  
 
 ## DESIGN PHILOSOPHY
 CHEF IS WRITTEN IN RUBY
@@ -406,25 +425,25 @@ How Chef uses a Ruby-based DSL
  - Chef is a thin domain-specific-language, meaning that it was built on top of Ruby. This means that you're able to easily customize with Ruby.
 
 How to use raw Ruby to extend Chef
- - If you'd ike to customize your cookbook, you can use raw Ruby anywhere in the cookbook.
+ - If you'd like to customize your cookbook, then you can use raw Ruby anywhere in the cookbook.
 
 What a library is
- - Ruby code can be stored in a cookbook's `libraries` directory and can be implemented anywhere in the cookbook.
+ - Ruby code can be stored in a cookbook's `libraries` directory and can be implemented / called anywhere in the cookbook's recipes or custom resources.
 
 ## EXPLICIT ACTIONS
 *Candidates should understand:*
 
 How Chef uses explicit actions and only does what you tell it to
- - You must state explicitly what you want Chef to do in your configuration.
+ - You must state explicitly what you want Chef to do in your configuration. 
 
 Actions for common resources such as the :nothing action
  - Common actions include :nothing, :create, :sync, :delete, :run, :start, :restart, :stop, :status, etc.
 
 What it means to roll back infrastructure
- - Rolling back would be to undo the configuration changes made to your infrastructure. This is not best practice with Chef, as you're only allowed to roll forward due to the nature of idempotency. You would need to first change your recipe to intentionally undo the changes to the infrastructure that you wanted to "roll back". Then you'd redefine the desired state in your recipe and instill those changes by converging again.
+ - Rolling back would be to undo the configuration changes made to your infrastructure. This is not best practice with Chef, as you're only allowed to roll back due to the nature of idempotency. You would need to first change your recipe to intentionally undo the changes to the infrastructure that you wanted to "roll back". Then you'd redefine the desired state in your recipe and instill those changes by converging again.
 
 What happens if you reverse the order of resources in a recipe
- - Resources are executed in the order 
+ - Resources are executed in the order in which they are written. So if you were to reverse them, Chef client would test and repair them in that new order.
 
 [If Chef can automatically detect what patches should be applied to a system](https://blog.chef.io/2017/01/05/patch-management-system-using-chef-automate/)
  - Yes and no. 
@@ -437,19 +456,19 @@ What happens if you reverse the order of resources in a recipe
 *Candidates should understand:*
 
 The difference between push and pull models
- - A push approach would be if the node that was being configured was idle while the server pushed a policy of configuration desired state to the node. This would mean that there is nothing additional being installed on the node being configured, only what is in the policy. A pull approach is what Chef employs, which means that the Chef server is idle while the client that is installed on the node being configured pulls the necessary data from the Chef server that it needs to complete its configuration given to it through a bootstrapping process.
+ - A push approach would be if the node that was being configured was passive while the server pushed a policy of configuration desired state to the node. This could mean that there is nothing additional being installed on the node being configured, only what is in the policy. A pull approach is what Chef employs, which means that the Chef server is passive while the client that is installed on the node being configured pulls the necessary data from the Chef server that it needs to complete its configuration given to it through a bootstrapping process.
 
 The benefits of a pull model
  - The major benefit of a pull model is scalability. The server that houses the data needed for configuration is not strained trying to configure all of the nodes. Instead the client installed on the node does the configuration itself.
 
 When a push model is appropriate
- - When you need to run a job independently of a `chef-client` run, a push job may be appropriate. This will allow you to send a job to a node independently of the client. 
+ - When you need to run a job independently of a `chef-client` run, a push job may be appropriate. This will allow you to send a job to a node independently of the client. A push model may also be required when orchestrating changes in an order amongst different types of servers.
 
 What firewall rules need to be enabled for Chef client
  - The Chef client communicates to the Chef server over https (port 443) or http (port 80).
 
 The Chef client converge intervals and how to invoke immediate updates
- - 
+ - Converge intervals are configured by the Chef client cookbook that you would include in your run list. Push jobs would be employed to invoke immediate updates.
 
 # RECOMMENDED WORKFLOWS
 *Candidates should understand:*
@@ -515,34 +534,33 @@ Basic	use	cases	for	Chef DK
 *Candidates should understand:*
 
 How to publish artifacts to Chef server
- - 
+ - One would use a `knife` command to upload artifacts to the Chef server.
 
 What Berkshelf is
- - 
+ - Berkshelf is a tool which one can use to upload artifacts such as cookbooks to the Chef server.
 
 If the Chef Automate workflow feature can push artifacts to things other than a Chef server or Supermarket
- - 
+ - Yes, Chef Automate can push artifacts to places like GitHub or production servers.
 
 How to manage cookbook dependencies
- - 
+ - Each cookbook that a cookbook is dependent upon must be included in that cookbook's metadata. After executing a `berks install`, 
 
 # UNDERSTANDING BASIC CHEF CODE
 
 ## APPROACHABLE CUSTOM CODE
 *Candidates should understand:*
 
-How to recognizing custom code
- - 
+How to recognize custom code
+ - Chef is a thin domain-specific-language, meaning that it was built on top of Ruby. This means that you're able to easily customize with Ruby.
 
 How to use libraries
- - 
+ - Ruby code can be stored in a cookbook's `libraries` directory and can be implemented / called anywhere in the cookbook's recipes or custom resources.
 
 How to customize Chef
- - 
+ - Chef is a thin domain-specific-language, meaning that it was built on top of Ruby. This means that you're able to easily customize with Ruby.
 
 ## APPROACHABLE CHEF CODE
 *Candidates should understand:*
 
 How to read a recipe that includes the 'package', 'file', and 'service' resources and describe its intent.
- - 
-
+ - (studied in kata)
