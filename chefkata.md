@@ -21,9 +21,9 @@ Any time I change the cookbook, from that cookbook’s directory, I need to:
 
 # To bootstrap a new machine:
 
-`knife bootstrap chefkata7.southcentralus.cloudapp.azure.com -N chefkata7 -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' --ssh-user annie --sudo`
+`knife bootstrap chefkata8.southcentralus.cloudapp.azure.com -N chefkata8 -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' --ssh-user annie --sudo`
 
-`knife bootstrap chefkata7prod.southcentralus.cloudapp.azure.com -N chefkata7prod -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' -E 'prod' --ssh-user annie --sudo`
+`knife bootstrap production8.southcentralus.cloudapp.azure.com -N chefkata8prod -r 'recipe[chefkata::default], recipe[ubuntu-14-hardening::default]' -E 'prod' --ssh-user annie --sudo`
 
 # To converge on that node from here on out:
 
@@ -32,8 +32,9 @@ run `sudo chef-client` in an ssh session
 # To validate with InSpec Profile
 First you have to add your private key to the local ssh (I don't know if it matters which directory you're in.)
 `ssh-add`
-`ssh annie@chefkata7.southcentralus.cloudapp.azure.com`
-`inspec exec https://github.com/anniehedgpeth/chefkata_inspec -t ssh://annie@chefkata7.southcentralus.cloudapp.azure.com`
+`ssh annie@chefkata8.southcentralus.cloudapp.azure.com`
+`inspec exec https://github.com/anniehedgpeth/chefkata_inspec -t ssh://annie@chefkata8.southcentralus.cloudapp.azure.com`
+`inspec exec https://github.com/anniehedgpeth/chefkata_inspec -t ssh://annie@production8.southcentralus.cloudapp.azure.com`
 
 # To add run-list:
 
@@ -103,3 +104,9 @@ Roles function just like data bags in the sense that they're sibling to the cook
  `knife role list`
  - to add the role to the runlist
  `knife node run_list add chefkata7 'role[security]'`
+
+## Environments
+`knife environment create ENVIRONMENT_NAME -d DESCRIPTION`
+`knife environment from file FILE (options)`
+`knife environment edit ENVIRONMENT_NAME`
+`knife environment show ENVIRONMENT_NAME`
