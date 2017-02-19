@@ -1,4 +1,4 @@
-# Create a new repo for today's kata
+# Create a new repo for today's kata (or just branch the repo)
  - from code/chef/work create a new repo `chef generate repo chefkata4`
  - create /code/chef/work/chefkata4/.chef and copy the user pem inside the .chef directory
  - generate knife.rb "generate knife config" for that org to put in .chef folder, too

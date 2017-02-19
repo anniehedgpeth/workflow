@@ -351,7 +351,7 @@ What the visibility feature is and how it affects workflow
  - It provides insight on how changes affect the state of Chef on the nodes.
  
 How a private Supermarket fits into a workflow
- - 
+ - You create your own server, then you reference your private supermarket in your Berksfile so that Chef server grabs the cookbooks from there.
  
 The Chef Automate open source components
  - The open source components of Automate include:
