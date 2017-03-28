@@ -1,4 +1,5 @@
 # LOCAL COOKBOOK DEVELOPMENT BADGE TOPICS
+
 The Local Cookbook Development badge is awarded when someone proves that they understand the process of developing cookbooks locally. Candidates must show:
 • An understanding of authoring cookbooks and setting up the local environment.
 • An understanding of the Chef DK tools.
@@ -14,26 +15,29 @@ _Here is a detailed breakdown of each area._
 ## REPO STRUCTURE - MONOLITHIC VS SINGLE COOKBOOK
 
 _Candidates should understand:_
+
 **The pros and cons of a single repository per cookbook**
+
 _Cookbooks should not reside in the Chef Repo but rather be pulled in via dependency management tools like Berkshelf. Each cookbook should have its own Git repository, build process, and test suite. Cookbooks should be treated as software projects of their own. The suggested structure is to completely remove the idea of putting Cookbooks in your Chef Repo all together. Every cookbook would be contained within its own Git repository and every cookbook has its own Berksfile._
 
-From there we suggest creating a build job on a CI server for every cookbook. This job would test and then upload the cookbook it is managing to your Chef Server.
+From there they suggest creating a build job on a CI server for every cookbook. This job would test and then upload the cookbook it is managing to your Chef Server.
 
 Pros -
  - Each cookbook can be tested, uploaded, and verified by a build server 
  - Change management is simpler 
- > pinning versions to environments is straightforward
- > there can be an open source mentality toward changes to the cookbook
- > the run-list will only allow for one cookbook of that name per organization otherwise confusion abounds
+   - pinning versions to environments is straightforward
+   - there can be an open source mentality toward changes to the cookbook
+   - the run-list will only allow for one cookbook of that name per organization otherwise confusion abounds
  - You can use the "monolithic" chef-repo pattern as a "management console".
  - A different Berksfile per cookbook means that each cookbook can have different dependencies. So if cookbook A depends on apache v 2.0.0 and cookbook B depends on apache v 2.2.2, B's dependencies don't cancel out A's.
 
 Cons - 
  - The cookbook is shared with other applications, so a change might cause issues.
- > you may or may not be the maintainer of that cookbook which means you may not have rights to change it on the master branch
- > you may need a wrapper cookbook to extend the functionality of that cookbook
+   - you may or may not be the maintainer of that cookbook which means you may not have rights to change it on the master branch
+   - you may need a wrapper cookbook to extend the functionality of that cookbook
 
 **The pros and cons of an application repository**
+
 Pros -
 Cons - 
 
