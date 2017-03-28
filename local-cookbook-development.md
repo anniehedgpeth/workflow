@@ -70,80 +70,86 @@ by Freezing it with the `knife cookbook upload alohaupdate --freeze` or `berks u
 in `metadata.rb`
 
 ### Semantic versioning
-
-`MAJOR.MINOR.PATCH` or `BreakingChanges.BackwardsCompatibleChanges.BackwardsCompatibleBugfixes`
+`MAJOR.MINOR.PATCH` or `BreakingChanges.BackwardsCompatibleChanges.BackwardsCompatibleBugFixes`
  - MAJOR version when you make incompatible API changes
  - MINOR version when you add functionality in a backwards-compatible manner
  - PATCH version when you make backwards-compatible bug fixes
 
-
-### Freezing cookbooks
-
+### [Freezing cookbooks](https://docs.chef.io/cookbook_versions.html#freeze-versions)
+A cookbook version can be frozen, which will prevent updates from being made to that version of a cookbook. (A user can always upload a new version of a cookbook.) Using cookbook versions that are frozen within environments is a reliable way to keep a production environment safe from accidental updates while testing changes that are made to a development infrastructure.
 
 ### Re-uploading and freezing cookbooks
-Use `knife cookbook upload alohaupdate --force`
-
+To freeze a cookbook version using knife, enter: `knife cookbook upload redis --freeze`
+Once a cookbook version is frozen, only by using the --force option can an update be made. `knife cookbook upload redis --force`
 
 ## STRUCTURING COOKBOOK CONTENT
-
 _Candidates should understand:_
 
 ### Modular content/reusability
 
+### Best practices around cookbooks that map 1:1 to a piece of software or functionality vs monolithic cookbooks
+1:1 cookbooks are preferred as each piece of software needs to be managed separately within its own git repo.
+ - Versioning - you can tag specific releases 
+ - Hands in the pot - you can easily give everyone clone access, but restrict push access to select teams for certain repos 
+ - History - if you need to history for a certain cookbook, you shouldn't have to run a complex git command to parse the logs 
+ - Monolithic things are generally anti-patterns
 
-**Best practices around cookbooks that map 1:1 to a piece of software or functionality vs monolithic cookbooks**
-
-
-**How to use common, core resources**
-
+### How to use common, core resources
+(This is accomplished with the [chefkata](https://github.com/anniehedgpeth/chefkata).)
 
 ## HOW METADATA IS USED
-
 _Candidates should understand:_
-**How to manage dependencies**
 
+### How to manage dependencies
+If you're using Berks, you would add `depends 'cookbook', 'version'` in the `metadata.rb`, and in the `Berksfile` you would add the `source`, such as the supermarket at `'https://supermarket.chef.io'`. 
 
-**Cookbook dependency version syntax**
-inside of `metadata.rb` put `depends 'alohaupdate'` or for a version constraint, `depends 'alohaupdate', '> 2.0'`
-the operators are `=, >=, >, <, <=, and ~>`. That last operator will go up to the next biggest version.
+If you're not using Berks, then you would add the dependencies to the `metadata.rb` in the same way, but you would run `knife upload `knife deps nodes/*.json` to use the output of knife deps to pass command to knife upload.
 
-**What information to include in a cookbook - author, license, etc**
+### Cookbook dependency version syntax
+Inside of `metadata.rb` put `depends '<cookbook>'` or for a version constraint, `depends '<cookbook>', '> 2.0'`
+ - The operators are `=, >=, >, <, <=, and ~>`. That last operator `~>` will go up to the next biggest version.
 
-
+### What information to include in a cookbook - author, license, etc
 **Metadata settings**
+
 ```ruby
-name 'alohaupdate'
-maintainer 'Michael Hedgpeth'
-maintainer_email 'my@email.com'
-source_url 'github.com'
+name 'chefkata'
+maintainer 'Annie Hedgpeth'
+maintainer_email 'annie.hedgpeth@gmail.com'
+license 'all_rights'
+description 'Installs/Configures chefkata'
+long_description 'Installs/Configures chefkata'
+version '0.1.0'
+issues_url 'https://github.com/<insert_org_here>/chefkata/issues' if respond_to?(:issues_url)
+source_url 'https://github.com/<insert_org_here>/chefkata' if respond_to?(:source_url)
 ```
 
-**What 'suggests' in metadata means**
-Same thing as depends, but that you suggest a cookbook be there
+### What 'suggests' in metadata means
+Same thing as depends, but that you suggest a cookbook be there. The cookbook will still run if that dependency doesn't exist.
 
-**What 'issues_url' in metadata means**
-The URL to go to the issues, used for supermarket
+### What 'issues_url' in metadata means
+The `issues_url` points to the location where issues for this cookbook are tracked.  A `View Issues` link will be displayed on this cookbook's page when uploaded to a Supermarket.
+The `source_url` points to the development repository for this cookbook.  A `View Source` link will be displayed on this cookbook's page when uploaded to a Supermarket.
 
 
 ## WRAPPER COOKBOOK METHODS
-
 _Candidates should understand:_
-**How to consume other cookbooks in code via wrapper cookbooks**
- - You would add those cookbooks as dependencies in the metadata and then consume them by either:
- - `include_recipe` in the recipe and set the attributes in the attributes file (i.e. chef-client cookbook with a lot of recipes)
- - use the resources provided by the cookbook (i.e. Tomcat cookbook with lots of resources and no recipes)
- - MH: Add `depends 'cookbook'` to `metadata.rb` and then either use `include_recipe 'cookbook'` or one of the cookbook's custom resources
 
-**How to change cookbook behavior via wrapper cookbooks**
+### How to consume other cookbooks in code via wrapper cookbooks
  - You would add those cookbooks as dependencies in the metadata and then consume them by either:
- - `include_recipe` in the recipe and set the attributes in the attributes file (i.e. chef-client cookbook with a lot of recipes)
- - use the resources provided by the cookbook (i.e. Tomcat cookbook with lots of resources and no recipes)
- - MH: Set the attributes of the cookbook with `node.default['attribute'] = 'overridden_value'` and use `include_recipe`
+   - `include_recipe` in the recipe and set the attributes in the attributes file (i.e. chef-client cookbook with a lot of recipes)
+   - use the resources provided by the cookbook (i.e. Tomcat cookbook with lots of resources and no recipes)
 
-**Attribute value precedence**
+### How to change cookbook behavior via wrapper cookbooks
+ - You would add those cookbooks as dependencies in the metadata and then consume them by either:
+   - `include_recipe` in the recipe and set the attributes in the attributes file (i.e. chef-client cookbook with a lot of recipes)
+   - use the resources provided by the cookbook (i.e. Tomcat cookbook with lots of resources and no recipes)
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Set the attributes of the cookbook with `node.default['attribute'] = 'overridden_value'` and use `include_recipe`
+
+### Attribute value precedence
  - OHAI will trump all other attributes. Then `override` will trump other attributes in the order of role, environment, node,/recipe, attribute files. Then the default attributes in that same order.
  - OHAI >> Override (R, E, N, A) >> default (R, E, N, A)
-MH: 
+[MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) 
  [later overrides earlier](https://docs.chef.io/attributes.html):
  Attribute -> Recipe -> Environment -> Role
  Default -> Normal -> Override -> OHAI
@@ -154,13 +160,13 @@ MH:
  environment: `default_attributes({ 'attribute' => 'value'})`, `override_attributes({'attribute' => 'value'})`
  role: `default_attributes({ 'attribute' => 'value'})`, `override_attributes({'attribute' => 'value'})`
 
-**How to use the `include_recipe` directive**
+### How to use the `include_recipe` directive**
  - Add the recipe to your metadata.rb file, then use the `include_recipe` resource to run that entire recipe within the recipe in which you're including it.
- - MH: add `depends 'cookbook_name'` to `metadata.rb` and then add `include_recipe 'cookbook_name::recipe_name'` to a recipe in your runlist
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) add `depends 'cookbook_name'` to `metadata.rb` and then add `include_recipe 'cookbook_name::recipe_name'` to a recipe in your runlist
 
 **What happens if the same recipe is included multiple times**
  - If the `include_recipe` method is used more than once to include a recipe, only the first inclusion is processed and any subsequent inclusions are ignored.
- - MH: Only the first inclusion is processed and any subsequent inclusions are ignored.
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Only the first inclusion is processed and any subsequent inclusions are ignored.
 
 **How to use the `depends` directive**
  - If you need a cookbook as a dependency, then you would include `depends '<cookbook>' '<version>'` in the metadata of the wrapper / main cookbook.
@@ -193,33 +199,33 @@ Public Supermarket -
  - fork it to your own repo in git and assume the responsibility to maintain that cookbook from your own repo
 
 **How to use Berkshelf to download cookbooks**
- - MH:  run `berks install` with a valid `Berksfile`
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md)  run `berks install` with a valid `Berksfile`
 
 **How to configure a Berksfile**
- - MH: `source` should point to a supermarket (and the first one gets precedence, so you could use a private then public supermarket)
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) `source` should point to a supermarket (and the first one gets precedence, so you could use a private then public supermarket)
   always include a `metadata` line to get all the `depends` attributes
   if your cookbook comes from another location than the supermarket, specify it, as in: `cookbook "alohaupdate", git: "http://github.com/mhedgpeth/alohaupdate'"`
 
 **How to use a Berksfile to manage a community cookbook and a local cookbook with the same name**
- - MH: By using a private supermarket or specifying the exact location of that cookbook on your private git server, thus making it ignore the supermarket as a default source
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) By using a private supermarket or specifying the exact location of that cookbook on your private git server, thus making it ignore the supermarket as a default source
 
 ## USING CHEF RESOURCES VS ARBITRARY COMMANDS
 
 _Candidates should understand:_
 **How to shell out to run commands.**
- - MH: Use the `shell_out` (when errors don't matter) or `shell_out!` (raises error when command fails)
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Use the `shell_out` (when errors don't matter) or `shell_out!` (raises error when command fails)
 
 **When/not to shell out**
- - MH: As read-only, not to change state
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) As read-only, not to change state
 
 **How to use the `execute` resource**
  - `execute '/usr/sbin/apachectl configtest'`
 
 **When/not to use the `execute` resource**
- - MH: When you are changing the state of the system
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) When you are changing the state of the system
 
 **How to ensure idempotence**
- - MH: By using notifies or the `not_if`/`only_if` clauses
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) By using notifies or the `not_if`/`only_if` clauses
 
 # CHEF DK TOOLS
 
