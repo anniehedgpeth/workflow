@@ -19,9 +19,9 @@ _Candidates should understand:_
 
 ### The pros and cons of a single repository per cookbook
 
-_Cookbooks should not reside in the Chef Repo but rather be pulled in via dependency management tools like Berkshelf. Each cookbook should have its own Git repository, build process, and test suite. Cookbooks should be treated as software projects of their own. The suggested structure is to completely remove the idea of putting Cookbooks in your Chef Repo all together. Every cookbook would be contained within its own Git repository and every cookbook has its own Berksfile._
+ - _Cookbooks should not reside in the Chef Repo but rather be pulled in via dependency management tools like Berkshelf. Each cookbook should have its own Git repository, build process, and test suite. Cookbooks should be treated as software projects of their own. The suggested structure is to completely remove the idea of putting Cookbooks in your Chef Repo all together. Every cookbook would be contained within its own Git repository and every cookbook has its own Berksfile._
 
-From there they suggest creating a build job on a CI server for every cookbook. This job would test and then upload the cookbook it is managing to your Chef Server.
+ - From there they suggest creating a build job on a CI server for every cookbook. This job would test and then upload the cookbook it is managing to your Chef Server.
 
 **Pros -**
  - Each cookbook can be tested, uploaded, and verified by a build server 
@@ -47,40 +47,40 @@ From there they suggest creating a build job on a CI server for every cookbook. 
 Everything needed for your application must be the same version, creating ownership and change management issues. 
 
 ### How the Chef workflow supports monolithic vs single cookbooks
-Monolithic: All of your Chef related source code, including any 3rd party dependencies, are tracked in one source control repository using Git. External dependencies, and any local modifications to them, are made with built-in vendor branches, allowing you to easily track the upstream for modifications.
+ - Monolithic: All of your Chef related source code, including any 3rd party dependencies, are tracked in one source control repository using Git. External dependencies, and any local modifications to them, are made with built-in vendor branches, allowing you to easily track the upstream for modifications.
 
-Single: All of the Chef cookbooks are treated as independent software projects, that can be built in isolation from any other cookbook. External dependencies are fetched as-needed, and treated as artifacts. Changes to the upstream creates a new software projects, and is tracked as such.
+ - Single: All of the Chef cookbooks are treated as independent software projects, that can be built in isolation from any other cookbook. External dependencies are fetched as-needed, and treated as artifacts. Changes to the upstream creates a new software projects, and is tracked as such.
 
 ### How to create a repository/workspace on the workstation
-You can either run `chef generate repo [name]` or download a starter kit from the Chef server for your organization.
+ - You can either run `chef generate repo [name]` or download a starter kit from the Chef server for your organization.
 
 ## VERSIONING OF COOKBOOKS
 _Candidates should understand:_
 
 ### Why cookbooks should be versioned
-Cookbooks need versions for running different cookbooks on their different environments.
+ - Cookbooks need versions for running different cookbooks on their different environments.
 
 ### The recommended methods of maintaining versions (e.g. knife spork)
-`knife spork bump alohaupdate` will automatically update the version number in your metadata if you don't manually change it in the `metadata.rb`.
+ - `knife spork bump alohaupdate` will automatically update the version number in your metadata if you don't manually change it in the `metadata.rb`.
 
 ### How to avoid overwriting cookbooks
-by Freezing it with the `knife cookbook upload alohaupdate --freeze` or `berks upload` which freezes
+ - by Freezing it with the `knife cookbook upload alohaupdate --freeze` or `berks upload` which freezes
 
 ### Where to define a cookbook version
-in `metadata.rb`
+ - in `metadata.rb`
 
 ### Semantic versioning
-`MAJOR.MINOR.PATCH` or `BreakingChanges.BackwardsCompatibleChanges.BackwardsCompatibleBugFixes`
- - MAJOR version when you make incompatible API changes
- - MINOR version when you add functionality in a backwards-compatible manner
- - PATCH version when you make backwards-compatible bug fixes
+ - `MAJOR.MINOR.PATCH` or `BreakingChanges.BackwardsCompatibleChanges.BackwardsCompatibleBugFixes`
+   - MAJOR version when you make incompatible API changes
+   - MINOR version when you add functionality in a backwards-compatible manner
+   - PATCH version when you make backwards-compatible bug fixes
 
 ### [Freezing cookbooks](https://docs.chef.io/cookbook_versions.html#freeze-versions)
-A cookbook version can be frozen, which will prevent updates from being made to that version of a cookbook. (A user can always upload a new version of a cookbook.) Using cookbook versions that are frozen within environments is a reliable way to keep a production environment safe from accidental updates while testing changes that are made to a development infrastructure.
+ - A cookbook version can be frozen, which will prevent updates from being made to that version of a cookbook. (A user can always upload a new version of a cookbook.) Using cookbook versions that are frozen within environments is a reliable way to keep a production environment safe from accidental updates while testing changes that are made to a development infrastructure.
 
 ### Re-uploading and freezing cookbooks
-To freeze a cookbook version using knife, enter: `knife cookbook upload redis --freeze`
-Once a cookbook version is frozen, only by using the --force option can an update be made. `knife cookbook upload redis --force`
+ - To freeze a cookbook version using knife, enter: `knife cookbook upload redis --freeze`
+ - Once a cookbook version is frozen, only by using the --force option can an update be made. `knife cookbook upload redis --force`
 
 ## STRUCTURING COOKBOOK CONTENT
 _Candidates should understand:_
@@ -88,26 +88,25 @@ _Candidates should understand:_
 ### Modular content/reusability
 
 ### Best practices around cookbooks that map 1:1 to a piece of software or functionality vs monolithic cookbooks
-1:1 cookbooks are preferred as each piece of software needs to be managed separately within its own git repo.
- - Versioning - you can tag specific releases 
- - Hands in the pot - you can easily give everyone clone access, but restrict push access to select teams for certain repos 
- - History - if you need to history for a certain cookbook, you shouldn't have to run a complex git command to parse the logs 
- - Monolithic things are generally anti-patterns
+ - 1:1 cookbooks are preferred as each piece of software needs to be managed separately within its own git repo.
+   - Versioning - you can tag specific releases 
+   - Hands in the pot - you can easily give everyone clone access, but restrict push access to select teams for certain repos 
+   - History - if you need to history for a certain cookbook, you shouldn't have to run a complex git command to parse the logs 
+   - Monolithic things are generally anti-patterns
 
 ### How to use common, core resources
-(This is accomplished with the [chefkata](https://github.com/anniehedgpeth/chefkata).)
+ - (This is accomplished with the [chefkata](https://github.com/anniehedgpeth/chefkata).)
 
 ## HOW METADATA IS USED
 _Candidates should understand:_
 
 ### How to manage dependencies
-If you're using Berks, you would add `depends 'cookbook', 'version'` in the `metadata.rb`, and in the `Berksfile` you would add the `source`, such as the supermarket at `'https://supermarket.chef.io'`. 
-
-If you're not using Berks, then you would add the dependencies to the `metadata.rb` in the same way, but you would run `knife upload `knife deps nodes/*.json` to use the output of knife deps to pass command to knife upload.
+ - If you're using Berks, you would add `depends 'cookbook', 'version'` in the `metadata.rb`, and in the `Berksfile` you would add the `source`, such as the supermarket at `'https://supermarket.chef.io'`. 
+ - If you're not using Berks, then you would add the dependencies to the `metadata.rb` in the same way, but you would run `knife upload `knife deps nodes/*.json` to use the output of knife deps to pass command to knife upload.
 
 ### Cookbook dependency version syntax
-Inside of `metadata.rb` put `depends '<cookbook>'` or for a version constraint, `depends '<cookbook>', '> 2.0'`
- - The operators are `=, >=, >, <, <=, and ~>`. That last operator `~>` will go up to the next biggest version.
+ - Inside of `metadata.rb` put `depends '<cookbook>'` or for a version constraint, `depends '<cookbook>', '> 2.0'`
+   - The operators are `=, >=, >, <, <=, and ~>`. That last operator `~>` will go up to the next biggest version.
 
 ### What information to include in a cookbook - author, license, etc
 **Metadata settings**
@@ -125,11 +124,11 @@ source_url 'https://github.com/<insert_org_here>/chefkata' if respond_to?(:sourc
 ```
 
 ### What 'suggests' in metadata means
-Same thing as depends, but that you suggest a cookbook be there. The cookbook will still run if that dependency doesn't exist.
+ - Same thing as depends, but that you suggest a cookbook be there. The cookbook will still run if that dependency doesn't exist.
 
 ### What 'issues_url' in metadata means
-The `issues_url` points to the location where issues for this cookbook are tracked.  A `View Issues` link will be displayed on this cookbook's page when uploaded to a Supermarket.
-The `source_url` points to the development repository for this cookbook.  A `View Source` link will be displayed on this cookbook's page when uploaded to a Supermarket.
+ - The `issues_url` points to the location where issues for this cookbook are tracked.  A `View Issues` link will be displayed on this cookbook's page when uploaded to a Supermarket.
+ - The `source_url` points to the development repository for this cookbook.  A `View Source` link will be displayed on this cookbook's page when uploaded to a Supermarket.
 
 
 ## WRAPPER COOKBOOK METHODS
@@ -149,71 +148,76 @@ _Candidates should understand:_
 ### Attribute value precedence
  - OHAI will trump all other attributes. Then `override` will trump other attributes in the order of role, environment, node,/recipe, attribute files. Then the default attributes in that same order.
  - OHAI >> Override (R, E, N, A) >> default (R, E, N, A)
-[MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) 
- [later overrides earlier](https://docs.chef.io/attributes.html):
- Attribute -> Recipe -> Environment -> Role
- Default -> Normal -> Override -> OHAI
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) [later overrides earlier](https://docs.chef.io/attributes.html):
+   - Attribute -> Recipe -> Environment -> Role
+   - Default -> Normal -> Override -> OHAI
 
- declared in:
- attribute: `default['attribute'] = value`, `normal['attribute'] = value`, `override['attribute'] = value`
- cookbook: `node.default['attribute'] = value`, `node.normal['attribute'] = value`, `node.override['attribute'] = value`
- environment: `default_attributes({ 'attribute' => 'value'})`, `override_attributes({'attribute' => 'value'})`
- role: `default_attributes({ 'attribute' => 'value'})`, `override_attributes({'attribute' => 'value'})`
+  - declared in:
+    - attribute: `default['attribute'] = value`, `normal['attribute'] = value`, `override['attribute'] = value`
+    - cookbook: `node.default['attribute'] = value`, `node.normal['attribute'] = value`, `node.override['attribute'] = value`
+    - environment: `default_attributes({ 'attribute' => 'value'})`, `override_attributes({'attribute' => 'value'})`
+    - role: `default_attributes({ 'attribute' => 'value'})`, `override_attributes({'attribute' => 'value'})`
 
 ### How to use the `include_recipe` directive**
  - Add the recipe to your metadata.rb file, then use the `include_recipe` resource to run that entire recipe within the recipe in which you're including it.
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) add `depends 'cookbook_name'` to `metadata.rb` and then add `include_recipe 'cookbook_name::recipe_name'` to a recipe in your runlist
 
-**What happens if the same recipe is included multiple times**
+### What happens if the same recipe is included multiple times
  - If the `include_recipe` method is used more than once to include a recipe, only the first inclusion is processed and any subsequent inclusions are ignored.
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Only the first inclusion is processed and any subsequent inclusions are ignored.
 
-**How to use the `depends` directive**
+### How to use the `depends` directive
  - If you need a cookbook as a dependency, then you would include `depends '<cookbook>' '<version>'` in the metadata of the wrapper / main cookbook.
 
 ## USING COMMUNITY COOKBOOKS
-
 _Candidates should understand:_
-**How to use a public and private Supermarket**
-Private Supermarket -
- - Create a server to serve as your private supermarket which hosts your cookbooks
- - add the URL of that server as your source to the private supermarket to your Berksfile so that it can look there for the dependent cookbooks and also add it to the knife.rb to upload cookbooks.
- - add all dependencies in the metadata.rb with `depends '<cookbook>' '<version>'`
- - use `knife cookbook site share COOKBOOK_NAME CATEGORY (options)` to upload cookbooks to the supermarket
 
-Public Supermarket - 
- - add the public supermarket link as your source in the Berksfile
- - add all dependencies in the metadata.rb with `depends '<cookbook>' '<version>'`
- - you may only update a cookbook in the public supermarket if you are the owner/maintainer
- - anyone can upload a cookbook to the public supermarket
+### How to use a public and private Supermarket
+ - Private Supermarket -
+   - Create a server to serve as your private supermarket which hosts your cookbooks
+   - add the URL of that server as your source to the private supermarket to your Berksfile so that it can look there for the dependent cookbooks and also add it to the knife.rb to upload cookbooks.
+   - add all dependencies in the metadata.rb with `depends '<cookbook>' '<version>'`
+   - use `knife cookbook site share COOKBOOK_NAME CATEGORY (options)` to upload cookbooks to the supermarket
 
-**How to use community cookbooks**
+ - Public Supermarket - 
+   - add the public supermarket link as your source in the Berksfile
+   - add all dependencies in the metadata.rb with `depends '<cookbook>' '<version>'`
+   - you may only update a cookbook in the public supermarket if you are the owner/maintainer
+   - anyone can upload a cookbook to the public supermarket
+
+### How to use community cookbooks
  - You can either use it from the Supermarket, in which you'd depend on it in metadata, or you can clone it from version control and upload it to the Chef server with berks.
 
-**How to wrap community cookbooks**
+### How to wrap community cookbooks
  - You would add those cookbooks as dependencies in the metadata and then consume them by either:
     - `include_recipe` in the recipe and set the attributes in the attributes file (i.e. chef-client cookbook with a lot of recipes)
     - use the resources provided by the cookbook (i.e. Tomcat cookbook with lots of resources and no recipes)
 
-**How to fork community cookbooks**
- - fork it to your own repo in git and assume the responsibility to maintain that cookbook from your own repo
+### How to fork community cookbooks
+ - Fork it to your own repo in git and assume the responsibility to maintain that cookbook from your own repo
 
-**How to use Berkshelf to download cookbooks**
- - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md)  run `berks install` with a valid `Berksfile`
+### How to use Berkshelf to download cookbooks
+ - run `berks install` with a valid `Berksfile` containing the source for the dependencies
 
-**How to configure a Berksfile**
+### How to configure a Berksfile
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) `source` should point to a supermarket (and the first one gets precedence, so you could use a private then public supermarket)
-  always include a `metadata` line to get all the `depends` attributes
-  if your cookbook comes from another location than the supermarket, specify it, as in: `cookbook "alohaupdate", git: "http://github.com/mhedgpeth/alohaupdate'"`
+   - Always include a `metadata` line to get all the `depends` attributes from the `metadata.rb`.
+   - If your cookbook comes from another location than the supermarket, specify it, as in: `cookbook "<cookbook>", git: "http://github.com/username/repo'"`
 
-**How to use a Berksfile to manage a community cookbook and a local cookbook with the same name**
+### How to use a Berksfile to manage a community cookbook and a local cookbook with the same name
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) By using a private supermarket or specifying the exact location of that cookbook on your private git server, thus making it ignore the supermarket as a default source
 
 ## USING CHEF RESOURCES VS ARBITRARY COMMANDS
-
 _Candidates should understand:_
-**How to shell out to run commands.**
+
+### [How to shell out to run commands](https://docs.chef.io/dsl_recipe.html#shell-out)
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Use the `shell_out` (when errors don't matter) or `shell_out!` (raises error when command fails)
+ - The `shell_out` method can be used to run a command against the node, and then display the output to the console when the log level is set to debug.
+   - `shell_out(command_args)` where command_args is the command that is run against the node
+ - The `shell_out!` method can be used to run a command against the node, display the output to the console when the log level is set to debug, and then raise an error when the method returns false.
+   - `shell_out!(command_args)` where command_args is the command that is run against the node. This method will return true or false.
+ - The `shell_out_with_systems_locale` method can be used to run a command against the node (via the `shell_out` method), but using the LC_ALL environment variable.
+   - `shell_out_with_systems_locale(command_args)` where command_args is the command that is run against the node.
 
 **When/not to shell out**
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) As read-only, not to change state
