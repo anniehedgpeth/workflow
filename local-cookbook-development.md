@@ -219,24 +219,24 @@ _Candidates should understand:_
  - The `shell_out_with_systems_locale` method can be used to run a command against the node (via the `shell_out` method), but using the LC_ALL environment variable.
    - `shell_out_with_systems_locale(command_args)` where command_args is the command that is run against the node.
 
-**When/not to shell out**
+### When/not to shell out
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) As read-only, not to change state
 
-**How to use the `execute` resource**
+### How to use the `execute` resource
  - `execute '/usr/sbin/apachectl configtest'`
 
-**When/not to use the `execute` resource**
+### When/not to use the `execute` resource
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) When you are changing the state of the system
 
-**How to ensure idempotence**
+### How to ensure idempotence
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) By using notifies or the `not_if`/`only_if` clauses
 
 # CHEF DK TOOLS
 
 ## `CHEF` COMMAND
-
 _Candidates should understand:_
-**What the 'chef' command does**
+
+### What the 'chef' command does
 `chef command [arguments...] [options...]`
 
 ```
@@ -262,7 +262,7 @@ Available Commands:
     verify                  Test the embedded ChefDK applications
   ```
 
-**What `chef generate` can create**
+### What `chef generate` can create
 
 ```
 Available generators:
@@ -279,30 +279,43 @@ Available generators:
   build-cookbook  Generate a build cookbook for use with Delivery
 ```
 
-**How to customize content using `generators`**
-**The recommended way to create a template**
-**How to add the same boilerplate text to every recipe created by a team**
-**The 'chef gem' command**
+### How to customize content using `generators`
+ - 
 
-### FOODCRITIC
+### The recommended way to create a template
+ - `chef generate template <templatename>`
 
-Candidates should understand:
+### How to add the same boilerplate text to every recipe created by a team
+ - 
 
-What Foodcritic is
-  Chef-specific linting of cookbooks
-Why developers should lint their code
-  Consistency
-Foodcritic errors and how to fix them
-  They all start with `FC001`, you can google that to get to the exact rule
-Community coding rules & custom rules
-Foodcritic commands
-  Just run `foodcritic .` to do a scan from the cookbook folder. Add `--epic-fail` to make it fail when foodcritic fails.
-Foodcritic rules 
-How to exclude Foodcritic rules
-  For the entire cookbook, add `FC###` to the `.foodcritic` file in the root of the cookbook folder
-  For single line of code, add the comment at the end of the line: `# ~FC003`
+### The 'chef gem' command
+ - 
 
-### BERKS
+
+## FOODCRITIC
+_Candidates should understand:_
+
+### What Foodcritic is
+ - Chef-specific linting of cookbooks
+
+### Why developers should lint their code
+ - Consistency
+
+### Foodcritic errors and how to fix them
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) They all start with `FC001`, you can google that to get to the exact rule
+
+### Community coding rules & custom rules
+
+### Foodcritic commands
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Just run `foodcritic .` to do a scan from the cookbook folder. Add `--epic-fail` to make it fail when foodcritic fails.
+
+### Foodcritic rules 
+
+### How to exclude Foodcritic rules
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) For the entire cookbook, add `FC###` to the `.foodcritic` file in the root of the cookbook folder
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) For single line of code, add the comment at the end of the line: `# ~FC003`
+
+## BERKS
 
 Candidates should understand:
 
