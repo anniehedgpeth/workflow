@@ -17,7 +17,7 @@ _Here is a detailed breakdown of each area._
 
 _Candidates should understand:_
 
-**The pros and cons of a single repository per cookbook**
+### The pros and cons of a single repository per cookbook
 
 _Cookbooks should not reside in the Chef Repo but rather be pulled in via dependency management tools like Berkshelf. Each cookbook should have its own Git repository, build process, and test suite. Cookbooks should be treated as software projects of their own. The suggested structure is to completely remove the idea of putting Cookbooks in your Chef Repo all together. Every cookbook would be contained within its own Git repository and every cookbook has its own Berksfile._
 
