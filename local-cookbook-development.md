@@ -37,7 +37,7 @@ From there they suggest creating a build job on a CI server for every cookbook. 
    - you may or may not be the maintainer of that cookbook which means you may not have rights to change it on the master branch
    - you may need a wrapper cookbook to extend the functionality of that cookbook
 
-**[The pros and cons of an application repository](https://chef.github.io/chef-rfc/rfc019-chef-workflows.html)**
+### [The pros and cons of an application repository](https://chef.github.io/chef-rfc/rfc019-chef-workflows.html)
 
 **Pros -**
  - Everything needed for your application is in one place so it lessens confusion.
@@ -47,41 +47,48 @@ From there they suggest creating a build job on a CI server for every cookbook. 
 **Cons -**
 Everything needed for your application must be the same version, creating ownership and change management issues. 
 
-**How the Chef workflow supports monolithic vs single cookbooks**
+### How the Chef workflow supports monolithic vs single cookbooks
+
 Monolithic: All of your Chef related source code, including any 3rd party dependencies, are tracked in one source control repository using Git. External dependencies, and any local modifications to them, are made with built-in vendor branches, allowing you to easily track the upstream for modifications.
 
-**How to create a repository/workspace on the workstation**
+Single: All of the Chef cookbooks are treated as independent software projects, that can be built in isolation from any other cookbook. External dependencies are fetched as-needed, and treated as artifacts. Changes to the upstream creates a new software projects, and is tracked as such.
 
+### How to create a repository/workspace on the workstation
+
+You can either run `chef generate repo [name]` or download a starter kit from the Chef server for your organization.
 
 ## VERSIONING OF COOKBOOKS
 
 _Candidates should understand:_
-**Why cookbooks should be versioned**
 
+### Why cookbooks should be versioned
 
-**The recommended methods of maintaining versions (e.g. knife spork)**
-`knife spork bump alohaupdate`
+Cookbooks need versions for running different cookbooks on their different environments.
 
-**How to avoid overwriting cookbooks**
+### The recommended methods of maintaining versions (e.g. knife spork)
+`knife spork bump alohaupdate` will automatically update the version number in your metadata if you don't manually change it in the `metadata.rb`.
+
+### How to avoid overwriting cookbooks
 by Freezing it with the `knife cookbook upload alohaupdate --freeze` or `berks upload` which freezes
 
-**Where to define a cookbook version**
+### Where to define a cookbook version
 in `metadata.rb`
 
-**Semantic versioning**
+### Semantic versioning
 `MAJOR.MINOR.PATCH` or `BreakingChanges.BackwardsCompatibleChanges.BackwardsCompatibleBugfixes`
 
-**Freezing cookbooks**
+### Freezing cookbooks
 
 
-**Re-uploading and freezing cookbooks**
+### Re-uploading and freezing cookbooks
 Use `knife cookbook upload alohaupdate --force`
 
 
 ## STRUCTURING COOKBOOK CONTENT
 
 _Candidates should understand:_
-**Modular content/reusability**
+
+### Modular content/reusability
 
 
 **Best practices around cookbooks that map 1:1 to a piece of software or functionality vs monolithic cookbooks**
