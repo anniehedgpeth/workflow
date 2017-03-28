@@ -23,7 +23,7 @@ _Cookbooks should not reside in the Chef Repo but rather be pulled in via depend
 
 From there they suggest creating a build job on a CI server for every cookbook. This job would test and then upload the cookbook it is managing to your Chef Server.
 
-Pros -
+**Pros -**
  - Each cookbook can be tested, uploaded, and verified by a build server 
  - Change management is simpler 
    - pinning versions to environments is straightforward
@@ -32,18 +32,23 @@ Pros -
  - You can use the "monolithic" chef-repo pattern as a "management console".
  - A different Berksfile per cookbook means that each cookbook can have different dependencies. So if cookbook A depends on apache v 2.0.0 and cookbook B depends on apache v 2.2.2, B's dependencies don't cancel out A's.
 
-Cons - 
+**Cons -**
  - The cookbook is shared with other applications, so a change might cause issues.
    - you may or may not be the maintainer of that cookbook which means you may not have rights to change it on the master branch
    - you may need a wrapper cookbook to extend the functionality of that cookbook
 
-**The pros and cons of an application repository**
+**[The pros and cons of an application repository](https://chef.github.io/chef-rfc/rfc019-chef-workflows.html)**
 
-Pros -
-Cons - 
+**Pros -**
+ - Everything needed for your application is in one place so it lessens confusion.
+ - `chef vendor dependencies` does what berks would do to install cookbook dependencies.
+ - You can test all your cookbooks together.
+
+**Cons -**
+Everything needed for your application must be the same version, creating ownership and change management issues. 
 
 **How the Chef workflow supports monolithic vs single cookbooks**
-
+Monolithic: All of your Chef related source code, including any 3rd party dependencies, are tracked in one source control repository using Git. External dependencies, and any local modifications to them, are made with built-in vendor branches, allowing you to easily track the upstream for modifications.
 
 **How to create a repository/workspace on the workstation**
 
