@@ -38,7 +38,6 @@ From there they suggest creating a build job on a CI server for every cookbook. 
    - you may need a wrapper cookbook to extend the functionality of that cookbook
 
 ### [The pros and cons of an application repository](https://chef.github.io/chef-rfc/rfc019-chef-workflows.html)
-
 **Pros -**
  - Everything needed for your application is in one place so it lessens confusion.
  - `chef vendor dependencies` does what berks would do to install cookbook dependencies.
@@ -75,7 +74,12 @@ by Freezing it with the `knife cookbook upload alohaupdate --freeze` or `berks u
 in `metadata.rb`
 
 ### Semantic versioning
+
 `MAJOR.MINOR.PATCH` or `BreakingChanges.BackwardsCompatibleChanges.BackwardsCompatibleBugfixes`
+ - MAJOR version when you make incompatible API changes
+ - MINOR version when you add functionality in a backwards-compatible manner
+ - PATCH version when you make backwards-compatible bug fixes
+
 
 ### Freezing cookbooks
 
