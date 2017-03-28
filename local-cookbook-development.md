@@ -1,6 +1,7 @@
 # LOCAL COOKBOOK DEVELOPMENT BADGE TOPICS
 
 The Local Cookbook Development badge is awarded when someone proves that they understand the process of developing cookbooks locally. Candidates must show:
+
 • An understanding of authoring cookbooks and setting up the local environment.
 • An understanding of the Chef DK tools.
 • An understanding of Test Kitchen configuration.
