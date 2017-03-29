@@ -229,6 +229,7 @@ _Candidates should understand:_
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) When you are changing the state of the system
 
 ### How to ensure idempotence
+ - by using guard clauses
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) By using notifies or the `not_if`/`only_if` clauses
 
 # CHEF DK TOOLS
@@ -236,8 +237,10 @@ _Candidates should understand:_
 ## `CHEF` COMMAND
 _Candidates should understand:_
 
-### What the 'chef' command does
-`chef command [arguments...] [options...]`
+### What the `chef` command does
+ - The `chef` command is used for generation and is like the `knife` command. You'd use it in place of `knife` when you use `policyfiles`.
+
+ - `chef command [arguments...] [options...]`
 
 ```
 Available Commands:
@@ -279,39 +282,53 @@ Available generators:
   build-cookbook  Generate a build cookbook for use with Delivery
 ```
 
-### How to customize content using `generators`
- - 
+### [How to customize content using `generators`](https://blog.chef.io/2014/12/09/guest-post-creating-your-own-chef-cookbook-generator/)
+ - `chef generate cookbook my_cookbook_name -g ~/chef/pan`
+  - This is a way that you can templatize the way in which you create a chef repo with settings specific to your organization.
 
 ### The recommended way to create a template
  - `chef generate template <templatename>`
 
 ### How to add the same boilerplate text to every recipe created by a team
- - 
+ - According to [this](https://medium.com/@echohack/creating-your-own-chef-cookbook-generator-5e998db1255b), you'd add it to the `code_generator` at `/opt/chefdk/embedded/apps/chef-dk/lib/chef-dk/skeletons/code_generator`.
 
-### The 'chef gem' command
- - 
+### The ['chef gem'](https://docs.chef.io/ctl_chef.html#chef-gem) command
+ - The chef gem subcommand is a wrapper around the gem command in RubyGems and is used by Chef to install RubyGems into the Chef development kit development environment. All knife plugins, drivers for Kitchen, and other Ruby applications that are not packaged within the Chef development kit will be installed to the .chefdk path in the home directory: ~/.chefdk/gem/ruby/ver.si.on/bin (where ver.si.on is the version of Ruby that is packaged within the Chef development kit).
 
-
-## FOODCRITIC
+## [FOODCRITIC](https://docs.chef.io/foodcritic.html)
 _Candidates should understand:_
 
 ### What Foodcritic is
  - Chef-specific linting of cookbooks
+ - Use Foodcritic to check cookbooks for common problems:
+   - Style
+   - Correctness
+   - Syntax
+   - Best practices
+   - Common mistakes
+   - Deprecations
 
 ### Why developers should lint their code
  - Consistency
 
 ### Foodcritic errors and how to fix them
- - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) They all start with `FC001`, you can google that to get to the exact rule
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) They all start with `FC001`; you can google that to get to the exact rule.
 
 ### Community coding rules & custom rules
 
 ### Foodcritic commands
+ - `foodcritic /path/to/cookbook`
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Just run `foodcritic .` to do a scan from the cookbook folder. Add `--epic-fail` to make it fail when foodcritic fails.
+ - A Foodcritic evaluation has the following syntax: `RULENUMBER: MESSAGE: FILEPATH:LINENUMBER`
 
-### Foodcritic rules 
+### [Foodcritic rules](http://www.foodcritic.io/)
+ - It comes with 60 built-in rules that identify problems ranging from simple style inconsistencies to difficult to diagnose issues that will hurt in production. 
+ - Various nice people in the Chef community have also written extra rules for foodcritic that you can install and run. Or write your own!
+   - [Custom Customink Rules](https://github.com/customink-webops/foodcritic-rules/blob/master/rules.rb)
+   - [Custom Etsy Rules](https://github.com/etsy/foodcritic-rules)
 
 ### How to exclude Foodcritic rules
+ - `foodcritic . --tags ~RULE`
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) For the entire cookbook, add `FC###` to the `.foodcritic` file in the root of the cookbook folder
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) For single line of code, add the comment at the end of the line: `# ~FC003`
 
@@ -412,13 +429,24 @@ The default recipe & attributes files
 Why there is a 'default' subdirectory under 'templates’
 Where tests are stored
 
-### ATTRIBUTES AND HOW THEY WORK 
-Candidates should understand:
-What attributes are
-Attributes as a nested hash
-How attributes are defined
-How attributes are named
+## ATTRIBUTES AND HOW THEY WORK 
+_Candidates should understand:_
+
+### What attributes are
+ - values defined in a file within the attributes directory
+
+### Attributes as a nested hash
+
+
+### How attributes are defined
+
+
+### How attributes are named
+
+
 How attributes are referenced
+ - `node[key:value]`
+
 Attribute precedence levels
 What Ohai is
 Local Cookbook Development Page 5 v1.0.3
