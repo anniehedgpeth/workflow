@@ -96,6 +96,23 @@ _Candidates should understand:_
 
 ### How to use common, core resources
  - (This is accomplished with the [chefkata](https://github.com/anniehedgpeth/chefkata).)
+ - `:nothing` is the only action that can be used with any resource.
+ - `file` `cookbook_file` `remote_file` `template` actions: 
+   - `:create` `:create_if_missing` `:delete` `:nothing` `:touch`
+ - Properties common to every resource include:
+   - `ignore_failure` `provider` `retries` `retry_delay` `sensitive` `supports`
+ - `execute` actions: `:nothing` `:run`
+ - Common `execute` properties: `command` `notifies` `creates` (Prevent a command from creating a file when that file already exists.) `path` `returns`
+
+```ruby
+cookbook_file '/var/www/customers/public_html/index.php' do
+  source 'index.php'
+  owner 'web_admin'
+  group 'web_admin'
+  mode '0755'
+  action :create
+end
+```
 
 ## HOW METADATA IS USED
 _Candidates should understand:_
@@ -358,22 +375,44 @@ _Candidates should understand:_
    - `berks list` will list cookbooks and their dependencies
    - `berks apply production Berksfile.lock` will apply the settings in berksfile to the provided environment
 
-## RUBOCOP
+## [RUBOCOP](https://docs.chef.io/rubocop.html)
 _Candidates should understand:_
 
 ### How to use RuboCop to check Ruby styles
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) `rubocop .` command from the cookbook folder
-RuboCop vs Foodcritic
-  Rubocop is for ruby style, Foodcritic is for chef style linting
-RuboCop configuration & commands
-  `--fail-fast` a good option for CI
-Auto correction
-  `-a` or `--auto-correct` to auto-correct offenses
-How to be selective about the rules you run
-  
-### TEST KITCHEN
 
-Candidates should understand:
+### RuboCop vs Foodcritic
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Rubocop is for ruby style, Foodcritic is for chef style linting
+ - Use RuboCop to author better Ruby code:
+   - Enforce style conventions and best practices
+   - Evaluate the code in a cookbook against metrics like “line length” and “function size”
+   - Help every member of a team to author similary structured code
+   - Establish uniformity of source code
+   - Set expectations for fellow (and future) project contributors
+
+### RuboCop configuration & commands
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) `--fail-fast` a good option for CI
+
+### Auto correction
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) `-a` or `--auto-correct` to auto-correct offenses
+
+### How to be selective about the rules you run
+ - Each cookbook has its own `.rubocop.yml` file, which means that each cookbook may have its own set of enabled, disabled, and custom rules. That said, it’s more common for all cookbooks to have the same set of enabled, disabled, and custom rules. When RuboCop is run against a cookbook, the full set of enabled and disabled rules (as defined the `enabled.yml` and `disabled.yml` files in RuboCop itself) are loaded first, and are then compared against the settings in the cookbook’s `.rubocop.yml` file.
+
+```ruby
+NAME_OF_RULE:
+  Description: 'a description of a rule'
+  Enabled : (true or false)
+  KEY: VALUE
+```
+ - Use a `.rubocop_todo.yml` file to capture the current state of all evaluations, and then write them to a file. This allows evaluations to reviewed one at a time. Disable any evaluations that are unhelpful, and then address the ones that are.
+ - To generate the `.rubocop_todo.yml` file, run the following command: `rubocop --auto-gen-config`
+   - Rename this file to `.rubocop.yml` to adopt this evaluation state as the standard. 
+   - Include this file in the `.rubocop.yml` file by adding `inherit_from: .rubocop_todo.yml` to the top of the `.rubocop.yml` file.
+
+
+## TEST KITCHEN
+_Candidates should understand:_
 
 Writing tests to verify intent
 How to focus tests on critical outcomes
@@ -464,7 +503,9 @@ The difference between 'file', 'cookbook_file', 'remote_file', and 'template'
 How two teams can manage the same file
 How to write templates
 What 'partial templates' are
-Common file-related resource actions and properties
+### Common file-related resource actions and properties
+ - 
+
 ERB syntax
 
 ### CUSTOM RESOURCES - HOW THEY ARE STRUCTURED AND WHERE THEY GO
