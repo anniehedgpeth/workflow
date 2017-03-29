@@ -333,32 +333,36 @@ _Candidates should understand:_
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) For single line of code, add the comment at the end of the line: `# ~FC003`
 
 ## BERKS
+_Candidates should understand:_
 
-Candidates should understand:
+### How to use berks to work with upstream dependencies
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) by using the supermarket for dependencies, or by doing version pinning
 
-How to use berks to work with upstream dependencies
-  by using the supermarket for dependencies, or by doing version pinning
-How to work with GitHub & Supermarket
-  in the `Berksfile` you can state the `git:` location or have another supermarket listed as your `source:` (or even multiple ones if you want public to be a backup)
-How to work with dependent cookbooks
-  Most of the time it works with `metadata.rb` inclusion, but you can extend it with the `cookbook` line (by including further version pinning and overriding location)
-How to troubleshoot berks issues **(???)**
-How to lock cookbook versions
-  cookbooks are frozen by default with a `berks upload`
-How to manage dependencies using berks
-berks commands
-  `berks install` loads dependencies locally
-  `berks upload` uploads dependencies to chef server
-  `berks info alohaupdate` will display information for that cookbook
-  `berks list` will list cookbooks and their dependencies
-  `berks apply production Berksfile.lock` - will apply the settings in berksfile to the provided environment
+### How to work with GitHub & Supermarket
+ -  [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) in the `Berksfile` you can state the `git:` location or have another supermarket listed as your `source:` (or even multiple ones if you want public to be a backup)
 
-### RUBOCOP
+### How to work with dependent cookbooks
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Most of the time it works with `metadata.rb` inclusion, but you can extend it with the `cookbook` line (by including further version pinning and overriding location).
 
-Candidates should understand:
+### How to troubleshoot berks issues
 
-How to use RuboCop to check Ruby styles
-  `rubocop .` command from the cookbook folder
+
+### How to lock cookbook versions
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) cookbooks are frozen by default with a `berks upload`
+
+### How to manage dependencies using berks
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) berks commands
+   - `berks install` loads dependencies locally
+   - `berks upload` uploads dependencies to chef server
+   - `berks info <cookbook>` will display information for that cookbook
+   - `berks list` will list cookbooks and their dependencies
+   - `berks apply production Berksfile.lock` will apply the settings in berksfile to the provided environment
+
+## RUBOCOP
+_Candidates should understand:_
+
+### How to use RuboCop to check Ruby styles
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) `rubocop .` command from the cookbook folder
 RuboCop vs Foodcritic
   Rubocop is for ruby style, Foodcritic is for chef style linting
 RuboCop configuration & commands
