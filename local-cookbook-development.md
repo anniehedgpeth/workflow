@@ -539,33 +539,93 @@ http_proxy_pass 'Password1'
 _Candidates should understand:_
 
 ### What a suite is
+ - a scenario that you want to run that consists of set of names for each of the platforms specified
+
+```yaml
+  - name: suite_name
+    driver:
+      name: driver_name
+    run_list:
+      - recipe[cookbook_name::recipe_name]
+    attributes: { foo: "bar" }
+    includes:
+      - platform-version
+```
+
+ - including or excluding platforms is available 
+
+```yaml
+ driver:
+   name: vagrant
+
+ provisioner:
+   name: chef_zero
+
+ platforms:
+   - name: ubuntu-12.04
+   - name: centos-6.4
+   - name: debian-7.1.0
+
+suites:
+  - name: default
+    run_list:
+      - recipe[apache::httpd]
+    excludes:
+      - debian-7.1.0
+```
 
 ### How to use suites to test different recipes in different environments
+ - Each suite is given a runlist. (see above)
+ - Attributes are given for each suite.
 
 ### Testing directory for InSpec
+ - The InSpec tests are to be stored in `<cookbook>/test/<integration-OR-recipes>/<suite-name>`
+ - If your path is different, then you must specify as such in the `.kitchen.yml`.
+
+```yaml
+  verifier:
+    inspec_tests:
+      - test/foo/bar
+```
 
 ### How to configure suites
+ - Answered above
+ - 1) edit their run lists, and 2) define a platform for the suite in the `platforms` setting
 
 ## PLATFORMS
 _Candidates should understand:_
 
 ### How to specify platforms
+ - Within the `suites:` you may include or exclude platforms that are listed in your `platforms:` section.
+
+```yaml
+    includes:
+      - platform-version
+```
 
 ### Common platforms
+ - ubuntu, debian, windows, centos, rhel
 
 ### How to locate base images
+ - [Bento](https://github.com/chef/bento) is a project that contains a set of base images that are used by Chef for internal testing and to provide a comprehensive set of base images for use with Kitchen. By default, Kitchen uses the base images provided by Bento. (Custom images may also be built using Packer.)
+ - If you are using a vagrant image, you can go to the Atlas site to see the available [Bento boxes](https://atlas.hashicorp.com/boxes/search?utf8=%E2%9C%93&sort=&provider=&q=bento).
 
 ### Common images and custom images
+ - The common images are from [Bento](https://atlas.hashicorp.com/boxes/search?utf8=%E2%9C%93&sort=&provider=&q=bento).
+ - If you want to make a custom image, then you would build it with [Packer](https://www.packer.io/intro/getting-started/build-image.html), then upload those files to Atlas.
+ - You may also use images built by the community on the Atlas site. 
 
 ## KITCHEN COMMANDS
 _Candidates should understand:_
 
 ### The basic Test Kitchen workflow
+ - 
 
 ### 'kitchen' commands
+ - 
 
 ### When tests get run
-
+ - 
 ### How to install bussers 
 
 ### What 'kitchen init' does
