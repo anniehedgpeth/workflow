@@ -649,53 +649,99 @@ _Candidates should understand:_
 _Candidates should understand:_
 
 ### What the components of a cookbook are
+ - Directories are:
+   - recipes
+   - files
+   - attributes
+   - test
+   - spec
+   - libraries
+   - templates
+   - definitions (don't want to use it, but you should be aware of it)
+   - resources
+   - providers (only if the cookbook employs lwrp or hwrp)
+ - Files are:
+   - .kitchen.yml
+   - Berksfile
+   - metadata.rb
+   - README.md
+   - chefignore
 
 ### What siblings of cookbooks in a repository are
+ - data_bags
+ - roles
+ - environments
 
 ### The default recipe & attributes files
+ - The default recipe is the only one that is run when a cookbook called without a recipe specified.
+ - An [attribute file](https://docs.chef.io/attributes.html) is located in the attributes/ sub-directory for a cookbook. 
+   - When a cookbook is run against a node, the attributes contained in all attribute files are evaluated in the context of the node object. 
+   - Node methods (when present) are used to set attribute values on a node.
 
 ### Why there is a 'default' subdirectory under 'templates’
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) It is the fallback of where to go for templates. Templates can also be platform specific, where the platform would be the directory. Or you can specify the group in the recipe code, which would be configurable
 
 ### Where tests are stored
+ -  inspec: `tests/integration/default`
+ -  serverspec: `spec` directory
 
 ## ATTRIBUTES AND HOW THEY WORK 
 _Candidates should understand:_
 
 ### What attributes are
- - values defined in a file within the attributes directory
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) values defined in a file within the attributes directory
 
 ### Attributes as a nested hash
-
+ - 
 
 ### How attributes are defined
-
+ - 
 
 ### How attributes are named
+ - 
 
-
-How attributes are referenced
+### How attributes are referenced
  - `node[key:value]`
 
-Attribute precedence levels
-What Ohai is
-Local Cookbook Development Page 5 v1.0.3
-What the 'platform' attribute is
-How to use the 'platform' attribute in recipes
+### Attribute precedence levels
+ - 
 
-### FILES AND TEMPLATES - DIFFERENCE AND HOW THEY WORK, WHEN TO USE EACH
-Candidates should understand:
-How to instantiate files on nodes
-The difference between 'file', 'cookbook_file', 'remote_file', and 'template'
-How two teams can manage the same file
-How to write templates
-What 'partial templates' are
+### What Ohai is
+ - 
+
+### What the 'platform' attribute is
+ - 
+
+### How to use the 'platform' attribute in recipes
+ - 
+
+## FILES AND TEMPLATES - DIFFERENCE AND HOW THEY WORK, WHEN TO USE EACH
+_Candidates should understand:_
+
+### How to instantiate files on nodes
+ - 
+
+### The difference between 'file', 'cookbook_file', 'remote_file', and 'template'
+ - 
+
+### How two teams can manage the same file
+ - 
+
+### How to write templates
+ - 
+
+### What 'partial templates' are
+ - 
+
 ### Common file-related resource actions and properties
  - 
 
-ERB syntax
+### ERB syntax
+ - 
 
-### CUSTOM RESOURCES - HOW THEY ARE STRUCTURED AND WHERE THEY GO
-Candidates should understand:
+## CUSTOM RESOURCES - HOW THEY ARE STRUCTURED AND WHERE THEY GO
+_Candidates should understand:_
+
 What custom resources are
 How to consume resources specified in another cookbook
 Naming conventions
