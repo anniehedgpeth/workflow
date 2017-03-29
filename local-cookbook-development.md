@@ -619,25 +619,44 @@ _Candidates should understand:_
 _Candidates should understand:_
 
 ### The basic Test Kitchen workflow
- - 
+ - `kitchen create` to create the vm instance
+ - `kitchen converge` to compile and converge the cookbooks on the vm instance
+ - `kitchen verify` to run the InSpec tests on the instance
+ - `kitchen destroy` to destroy the instance
 
 ### 'kitchen' commands
- - 
+ - `kitchen create` to create the vm instance
+ - `kitchen converge` to compile and converge the cookbooks on the vm instance
+ - `kitchen verify` to run the InSpec tests on the instance
+ - `kitchen destroy` to destroy the instance
+ - `kitchen test` to destroy the instance if one exits followed by running through all of the above tests and finishing with another destroy
+ - `kitchen login` to log into the vm instance
+ - `kitchen init` to initialize a new `.kitchen.yml`
 
 ### When tests get run
- - 
-### How to install bussers 
+ - when you run `kitchen verify`
+
+### How to install [bussers](https://docs.chef.io/kitchen.html#busser) 
+ - Busser is a test setup and execution framework that is designed to work on remote nodes whose system dependencies cannot be relied upon. 
+   - Kitchen uses Busser to run post-convergence tests via a plugin architecture that supports different test frameworks. Busser is installed automatically as part of Kitchen.
 
 ### What 'kitchen init' does
+ - `kitchen init` to initialize a new `.kitchen.yml`
 
-## COOKBOOK COMPONENTS 
-DIRECTORY STRUCTURE OF A COOKBOOK
-Candidates should understand:
-What the components of a cookbook are
-What siblings of cookbooks in a repository are
-The default recipe & attributes files
-Why there is a 'default' subdirectory under 'templates’
-Where tests are stored
+# COOKBOOK COMPONENTS 
+
+## DIRECTORY STRUCTURE OF A COOKBOOK
+_Candidates should understand:_
+
+### What the components of a cookbook are
+
+### What siblings of cookbooks in a repository are
+
+### The default recipe & attributes files
+
+### Why there is a 'default' subdirectory under 'templates’
+
+### Where tests are stored
 
 ## ATTRIBUTES AND HOW THEY WORK 
 _Candidates should understand:_
