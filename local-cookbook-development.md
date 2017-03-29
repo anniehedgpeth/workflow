@@ -429,26 +429,107 @@ _Candidates should understand:_
 
 # TEST KITCHEN 
 
+ - The basic structure of a .kitchen.yml file is as follows:
+
+```yaml
+driver:
+  name: driver_name
+
+provisioner:
+  name: provisioner_name
+
+verifier:
+  name: verifier_name
+
+transport:
+  name: transport_name
+
+platforms:
+  - name: platform-version
+    driver:
+      name: driver_name
+  - name: platform-version
+
+suites:
+  - name: suite_name
+    run_list:
+      - recipe[cookbook_name::recipe_name]
+    attributes: { foo: "bar" }
+    excludes:
+      - platform-version
+  - name: suite_name
+    driver:
+      name: driver_name
+    run_list:
+      - recipe[cookbook_name::recipe_name]
+    attributes: { foo: "bar" }
+    includes:
+      - platform-version
+```
+
 ## DRIVERS
 _Candidates should understand:_
 
 ### Test Kitchen provider & platform support
+ - `platforms:` contains a list of all the platforms that Kitchen will test against when executed. This should be a list of all the platforms that you want your cookbook to support.
 
 ### How to use .kitchen.yml to set up complex testing matrices
+ - In the `.kitchen.yml` file we define two fields that create a test matrix; the number of **platforms** we want to support multiplied by the number of test **suites** that we defined.
 
 ### How to test a cookbook on multiple deployment scenarios
+ - In the `.kitchen.yml` file we define two fields that create a test matrix; the number of **platforms** we want to support multiplied by the number of test **suites** that we defined.
 
 ### How to configure drivers
+ - Kitchen uses a driver plugin architecture to enable Kitchen to simulate testing on cloud providers, such as Amazon EC2, OpenStack, and Rackspace, and also on non-cloud platforms, such as Microsoft Windows. Each driver is responsible for managing a virtual instance of that platform so that it may be used by Kitchen during cookbook testing.
+   - Most drivers have driver-specific configuration settings that must be added to the `.kitchen.yml` file before Kitchen will be able to use that platform during cookbook testing. For information about these driver-specific settings, refer to the driver-specific documentation.
+   - Common drivers include: 
+     - `kitchen-all`   A driver for everything, or “all the drivers in a single Ruby gem”.
+     - `kitchen-bluebox` A driver for Blue Box.
+     - `kitchen-cloudstack` A driver for CloudStack.
+     - `kitchen-digitalocean` A driver for DigitalOcean.
+     - `kitchen-docker` A driver for Docker.
+     - `kitchen-dsc` A driver for Windows PowerShell Desired State Configuration (DSC).
+     - `kitchen-ec2` A driver for Amazon EC2.
+     - `kitchen-fog` A driver for Fog, a Ruby gem for interacting with various cloud providers.
+     - `kitchen-google` A driver for Google Compute Engine.
+     - `kitchen-hyperv` A driver for Hyper-V Server.
+     - `kitchen-joyent` A driver for Joyent.
+     - `kitchen-linode` A driver for Linode.
+     - `kitchen-opennebula` A driver for OpenNebula.
+     - `kitchen-openstack` A driver for OpenStack.
+     - `kitchen-pester` A driver for Pester, a testing framework for Microsoft Windows.
+     - `kitchen-rackspace` A driver for Rackspace.
+     - `kitchen-vagrant` A driver for Vagrant. The default driver packaged with the Chef development kit.
 
 ## PROVISIONER
 _Candidates should understand:_
 
 ### The available provisioners
+ - `chef_zero` and `chef_solo` are the most common provisioners used for testing cookbooks.
 
 ### How to configure provisioners
 
-### When to use chef-client vs. chef-solo vs. Chef
+```yaml
+provisioner:
+  name: chef_zero
+  http_proxy: http://10.0.0.1
+```
+ - The environment variables `http_proxy`, `https_proxy`, and `ftp_proxy` are honored by Kitchen for proxies. The `client.rb` file is read to look for proxy configuration settings. If `http_proxy`, `https_proxy`, and `ftp_proxy` are specified in the `client.rb` file, the `chef-client` will configure the ENV variable based on these (and related) settings. 
 
+```ruby
+http_proxy 'http://proxy.example.org:8080'
+http_proxy_user 'myself'
+http_proxy_pass 'Password1'
+```
+
+ - `ENV['http_proxy'] = 'http://myself:Password1@proxy.example.org:8080'`
+ - Kitchen also supports `http_proxy` and `https_proxy` in the `.kitchen.yml` file:
+
+### When to use `chef-client` vs. `chef-solo` vs. `Chef`
+ - `chef-client` to converge the node when it is bootstrapped to the Chef server.
+ - `chef-solo` as the provisioner for Test Kitchen when you run a light-weight version of Chef on the VM being tested
+ - `Chef` when you interact with the Chef server
+ 
 ### How to use the shell provisioner  
 
 
