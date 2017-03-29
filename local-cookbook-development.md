@@ -415,12 +415,17 @@ NAME_OF_RULE:
 _Candidates should understand:_
 
 ### Writing tests to verify intent
+ - One should use InSpec to write tests that verify that the desired state was achieved, not necessarily that all of the resources simply converged but that they're functioning in the desired state.
 
 ### How to focus tests on critical outcomes
+ - One should use InSpec to write tests that verify that the desired state was achieved, not necessarily that all of the resources simply converged but that they're functioning in the desired state.
 
 ### How to test each resource component vs how to test for desired outcomes
+ - One should use InSpec to write tests that verify that the desired state was achieved, not necessarily that all of the resources simply converged but that they're functioning in the desired state.
 
 ### Regression testing
+ - Running `kitchen converge` twice will ensure your policy applies without error to existing instances
+ - Running `kitchen test` will ensure your policy applies without error to any new instances
 
 # TEST KITCHEN 
 
