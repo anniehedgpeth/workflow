@@ -530,8 +530,10 @@ http_proxy_pass 'Password1'
  - `chef-solo` as the provisioner for Test Kitchen when you run a light-weight version of Chef on the VM being tested
  - `Chef` when you interact with the Chef server
  
-### How to use the shell provisioner  
-
+### How to use the [shell provisioner](https://www.morethanseven.net/2014/01/12/shell-provisioner-for-test-kitchen/)  
+ - to run a command during a converge
+ - The shell provisioner is going to look for a file called `bootstrap.sh` by default.
+   - In this case our script is completely self contained but if it needed some additional files we could put them in a directory called data and they would be copied to the newly created virtual machine under `/tmp/kitchen`.
 
 ## SUITES
 _Candidates should understand:_
