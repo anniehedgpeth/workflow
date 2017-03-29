@@ -414,56 +414,75 @@ NAME_OF_RULE:
 ## TEST KITCHEN
 _Candidates should understand:_
 
-Writing tests to verify intent
-How to focus tests on critical outcomes
-How to test each resource component vs how to test for desired outcomes
-Regression testing
+### Writing tests to verify intent
 
-## TEST KITCHEN 
+### How to focus tests on critical outcomes
 
-### DRIVERS
+### How to test each resource component vs how to test for desired outcomes
 
-Candidates should understand:
-Test Kitchen provider & platform support
-How to use .kitchen.yml to set up complex testing matrices
-How to test a cookbook on multiple deployment scenarios
-How to configure drivers
+### Regression testing
 
-### PROVISIONER
+# TEST KITCHEN 
 
-Candidates should understand:
-The available provisioners
-Local Cookbook Development Page 4 v1.0.3
-How to configure provisioners
-When to use chef-client vs. chef-solo vs. Chef
-How to use the shell provisioner  
-
-### SUITES
-
-Candidates should understand:
-What a suite is
-How to use suites to test different recipes in different environments
-Testing directory for InSpec
-How to configure suites
-
-### PLATFORMS
-Candidates should understand:
-How to specify platforms
-Common platforms
-How to locate base images
-Common images and custom images
-
-### KITCHEN COMMANDS
+## DRIVERS
 _Candidates should understand:_
-**The basic Test Kitchen workflow**
+
+### Test Kitchen provider & platform support
+
+### How to use .kitchen.yml to set up complex testing matrices
+
+### How to test a cookbook on multiple deployment scenarios
+
+### How to configure drivers
+
+## PROVISIONER
+_Candidates should understand:_
+
+### The available provisioners
+
+### How to configure provisioners
+
+### When to use chef-client vs. chef-solo vs. Chef
+
+### How to use the shell provisioner  
 
 
-'kitchen' commands
-When tests get run
-How to install bussers 
-What 'kitchen init' does
+## SUITES
+_Candidates should understand:_
 
-### COOKBOOK COMPONENTS 
+### What a suite is
+
+### How to use suites to test different recipes in different environments
+
+### Testing directory for InSpec
+
+### How to configure suites
+
+## PLATFORMS
+_Candidates should understand:_
+
+### How to specify platforms
+
+### Common platforms
+
+### How to locate base images
+
+### Common images and custom images
+
+## KITCHEN COMMANDS
+_Candidates should understand:_
+
+### The basic Test Kitchen workflow
+
+### 'kitchen' commands
+
+### When tests get run
+
+### How to install bussers 
+
+### What 'kitchen init' does
+
+## COOKBOOK COMPONENTS 
 DIRECTORY STRUCTURE OF A COOKBOOK
 Candidates should understand:
 What the components of a cookbook are
