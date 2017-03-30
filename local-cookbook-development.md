@@ -892,7 +892,7 @@ end
  - see above
 
 ### How to run InSpec tests
-
+ - `inspec exec path/to/test`
  - After running the tests, you will receive feedback about what was retuned in regard to what was expected.
 
 ```ruby
@@ -917,22 +917,36 @@ Candidates should understand:
  - 
 
 ### The ChefSpec value proposition
- - 
+ - The benefit of writing tests focused around the Resource Collection will allow us to gain feedback quickly and build a better development workflow.
 
 ### What happens when you run ChefSpec
- - 
+ - it tests the resources compiled, not running those resources
 
 ### ChefSpec syntax
- - 
+
+```ruby
+describe 'scenario'
+  context 'when something happens' do
+    let :chef_run do
+      runner = ChefSpec::SoloRunner.new(platform: 'windows', version: '2012R2')
+      runner.converge(described_recipe)
+    end
+
+    it 'converges successfully' do
+      expect { chef_run }.to_not raise_error
+    end
+  end
+```
 
 ### How to write ChefSpec tests
  - 
 
 ### How to run ChefSpec tests
- - 
+ - `rspec` or `chef exec rspec`
 
 ### Where ChefSpec tests are stored
-
+ - `spec/unit/recipes`
+ 
 ## GENERIC TESTING TOPICS
 _Candidates should understand:_
 
