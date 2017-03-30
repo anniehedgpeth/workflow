@@ -770,108 +770,239 @@ end
 ## FILES AND TEMPLATES - DIFFERENCE AND HOW THEY WORK, WHEN TO USE EACH
 _Candidates should understand:_
 
-### How to instantiate files on nodes
- - Files can be instantiated by using the 
+### How to instantiate [files](https://docs.chef.io/files.html) on nodes
+ - Use the `cookbook_file` resource to manage files that are added to nodes based on files that are located in the /files directory in a cookbook.
+ - Use the `file` resource to manage files directly on a node.
+ - Use the `remote_file` resource to transfer files to nodes from remote locations.
+ - Use the `template` resource to manage files that are added to nodes based on files that are located in the /templates directory in a cookbook.
 
-### The difference between 'file', 'cookbook_file', 'remote_file', and 'template'
- - 
+### The difference between `file`, `cookbook_file`, `remote_file`, and `template`
+   - `file` - Use this when you want to create a simple file. You'll use the `content` property to add the content. 
+   - `cookbook_file` - Use this when you want to store a file in the cookbook to be copied directly onto the node.
+   - `source` - Use this when you have a remote source on which the file is stored that you want put on the node.
+   - `template` - Use this when you want to create a file out of a template based on environment variables.
 
 ### How two teams can manage the same file
- - 
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) If they can share the same cookbok, then by overriding attributes on the same cookbook. Otherwise use partial templates (see below).
 
 ### How to write templates
- - 
+ - You would use the `template` resource in the recipe:
 
-### What 'partial templates' are
- - 
+```ruby
+template '/etc/motd' do
+  source 'motd.erb'
+  owner 'root'
+  group 'root'
+  mode '0755'
+  variables({
+    key: 'value'
+  })
+end
+```
+ - And the actual template would be the file name with its extension and an `.erb` extension. The file would look like:
+
+```
+message = <%= message %>
+```
+
+### What ['partial templates'](https://docs.chef.io/resource_template.html#partial-templates) are
+ - A template can be built in a way that allows it to contain references to one (or more) smaller template files. 
+ - These smaller template files are also referred to as partials.
+ - A partial can be referenced from a template file in one of the following ways:
+   - By using the render method in the template file
+     - `<%= render "simple.txt.erb", :variables => {:user => Etc.getlogin }, :local => true %>`
+   - By using the template resource and the variables property
 
 ### Common file-related resource actions and properties
  - 
 
-### ERB syntax
- - 
+### [ERB syntax](https://docs.puppet.com/puppet/4.9/lang_template_erb.html)
+ - Each ERB tag has a beginning tag and a matched ending tag. `<% code %>`
+   - This executes the ruby code within the brackets and does not display the result. `<% if (50 + 50) == 100 %>`
+   - We use `<%= code %>` when we want to show the value stored in a variable or the result of some calculation.
+     - For example: `<%= node['hostname'] %>`
 
 ## CUSTOM RESOURCES - HOW THEY ARE STRUCTURED AND WHERE THEY GO
 _Candidates should understand:_
 
-What custom resources are
-How to consume resources specified in another cookbook
-Naming conventions
-How to test custom resources
+### What custom resources are
+ - 
 
-### LIBRARIES 
-Candidates should understand:
-What libraries are and when to use them
-Where libraries are stored
+### How to consume resources specified in another cookbook
+ - 
 
-## AVAILALABLE TESTING FRAMEWORKS 
+### Naming conventions
+ - 
 
-### INSPEC
-Candidates should understand:
-How to test common resources with InSpec
-InSpec syntax
-How to write InSpec tests
-How to run InSpec tests
-Where InSpec tests are stored
+### How to test custom resources
+ - 
+
+## LIBRARIES 
+_Candidates should understand:_
+
+### What libraries are and when to use them
+ - 
+ 
+### Where libraries are stored
+ - 
+
+# AVAILALABLE TESTING FRAMEWORKS 
+
+## INSPEC
+_Candidates should understand:_
+
+### How to test common resources with InSpec
+ - 
+
+### InSpec syntax
+ - 
+
+### How to write InSpec tests
+ - 
+
+### How to run InSpec tests
+ - 
+
+### Where InSpec tests are stored
+ - 
+
 
 ### CHEFSPEC
 Candidates should understand:
-What ChefSpec is
-The ChefSpec value proposition
-What happens when you run ChefSpec
-ChefSpec syntax
-How to write ChefSpec tests
-How to run ChefSpec tests
-Where ChefSpec tests are stored
-Local Cookbook Development Page 6 v1.0.3
 
-### GENERIC TESTING TOPICS
-Candidates should understand:
-The test-driven development (TDD) workflow
-Where tests are stored
-How tests are organized in a cookbook
-Naming conventions - how Test Kitchen finds tests
-Tools to test code "at rest" 
-Integration testing tools
-Tools to run code and test the output
-When to use ChefSpec in the workflow  
-When to use Test Kitchen in the workflow
-Testing intent
-Functional vs unit testing
+### What ChefSpec is
+ - 
 
-## TROUBLESHOOTING 
+### The ChefSpec value proposition
+ - 
 
-### READING TEST-KITCHEN OUTPUT
-Candidates should understand:
-Test Kitchen phases and associated output
+### What happens when you run ChefSpec
+ - 
 
-### COMPILE VS. CONVERGE
-Candidates should understand:
-What happens during the compile phase of a chef-client run
-What happens during the converge phase of a chef-client run
-When pure Ruby gets executed
-When Chef code gets executed
+### ChefSpec syntax
+ - 
 
-## SEARCH AND DATABAGS 
+### How to write ChefSpec tests
+ - 
 
-### DATA BAGS
-Candidates should understand:
-What databags are
-Where databags are stored
-When to use databags
-How to use databags
-How to create a databag
-How to update a databag
-How to search databags
-Chef Vault
-The difference between databags and attributes
-What 'knife' commands to use to CRUD databags
+### How to run ChefSpec tests
+ - 
 
-### SEARCH
-Candidates should understand:
-What data is indexed and searchable
-Local Cookbook Development Page 7 v1.0.3
-Why you would search in a recipe
-Search criteria syntax
-How to invoke a search from the command line
-How to invoke a search from within a recipe
+### Where ChefSpec tests are stored
+
+## GENERIC TESTING TOPICS
+_Candidates should understand:_
+
+### The test-driven development (TDD) workflow
+ - 
+
+### Where tests are stored
+ - 
+
+### How tests are organized in a cookbook
+ - 
+
+### Naming conventions - how Test Kitchen finds tests
+ - 
+
+### Tools to test code "at rest" 
+ - 
+
+### Integration testing tools
+ - 
+
+### Tools to run code and test the output
+ - 
+
+### When to use ChefSpec in the workflow  
+ - 
+
+### When to use Test Kitchen in the workflow
+ - 
+
+### Testing intent
+ - 
+
+### Functional vs unit testing
+ - 
+
+
+# TROUBLESHOOTING 
+
+## READING TEST-KITCHEN OUTPUT
+_Candidates should understand:_
+
+### Test Kitchen phases and associated output
+ - 
+
+
+## COMPILE VS. CONVERGE
+_Candidates should understand:_
+
+### What happens during the compile phase of a chef-client run
+ - 
+
+### What happens during the converge phase of a chef-client run
+ - 
+
+### When pure Ruby gets executed
+ - 
+
+### When Chef code gets executed
+ - 
+
+
+# SEARCH AND DATABAGS 
+
+## DATA BAGS
+_Candidates should understand:_
+
+### What databags are
+ - 
+
+### Where databags are stored
+ - 
+
+### When to use databags
+ - 
+
+### How to use databags
+ - 
+
+### How to create a databag
+ - 
+
+### How to update a databag
+ - 
+
+### How to search databags
+ - 
+
+### Chef Vault
+ - 
+
+### The difference between databags and attributes
+ - 
+
+### What 'knife' commands to use to CRUD databags
+ - 
+
+
+## SEARCH
+_Candidates should understand:_
+
+### What data is indexed and searchable
+ - 
+
+### Why you would search in a recipe
+ - 
+
+### Search criteria syntax
+ - 
+
+### How to invoke a search from the command line
+ - 
+
+### How to invoke a search from within a recipe
+ - 
+
