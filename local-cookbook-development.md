@@ -382,7 +382,7 @@ _Candidates should understand:_
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) `rubocop .` command from the cookbook folder
 
 ### RuboCop vs Foodcritic
- - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Rubocop is for ruby style, Foodcritic is for chef style linting
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Rubocop is for ruby style, Foodcritic is for chef specifid linting
  - Use RuboCop to author better Ruby code:
    - Enforce style conventions and best practices
    - Evaluate the code in a cookbook against metrics like “line length” and “function size”
@@ -938,9 +938,50 @@ describe 'scenario'
   end
 ```
 
-### How to write ChefSpec tests
- - 
+### How to write [ChefSpec tests](https://docs.chef.io/chefspec.html)
 
+```ruby
+# Recipe - file resource
+
+file '/tmp/explicit_action' do
+  action :delete
+end
+
+file '/tmp/with_attributes' do
+  user 'user'
+  group 'group'
+  backup false
+  action :delete
+end
+
+file 'specifying the identity attribute' do
+  path   '/tmp/identity_attribute'
+ action :delete
+end
+```
+
+```ruby
+# Unit Test
+require 'chefspec'
+
+describe 'file::delete' do
+  let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04').converge(described_recipe) }
+
+  it 'deletes a file with an explicit action' do
+    expect(chef_run).to delete_file('/tmp/explicit_action')
+    expect(chef_run).to_not delete_file('/tmp/not_explicit_action')
+  end
+
+  it 'deletes a file with attributes' do
+    expect(chef_run).to delete_file('/tmp/with_attributes').with(backup: false)
+    expect(chef_run).to_not delete_file('/tmp/with_attributes').with(backup: true)
+  end
+
+  it 'deletes a file when specifying the identity attribute' do
+    expect(chef_run).to delete_file('/tmp/identity_attribute')
+  end
+end
+```
 ### How to run ChefSpec tests
  - `rspec` or `chef exec rspec`
 
@@ -951,37 +992,49 @@ describe 'scenario'
 _Candidates should understand:_
 
 ### The test-driven development (TDD) workflow
- - 
+ - Define a test set for the unit first
+ - Then implement the unit
+ - Finally verify that the implementation of the unit makes the tests succeed.
+ - Refactor
 
 ### Where tests are stored
- - 
+ - Inspec: `<cookbook>/test/<integration-OR-recipes>/<suite-name>`
+ - ChefSpec: `<cookbook>/spec/unit/recipes`
 
 ### How tests are organized in a cookbook
- - 
+ - by suites
 
 ### Naming conventions - how Test Kitchen finds tests
- - 
+ - The InSpec tests are to be stored in `<cookbook>/test/<integration-OR-recipes>/<suite-name>`
+ - If your path is different, then you must specify as such in the .kitchen.yml.
+
+```yaml
+  verifier:
+    inspec_tests:
+      - test/foo/bar
+```
 
 ### Tools to test code "at rest" 
- - 
+ - Foodcritic and Rubocop
 
 ### Integration testing tools
- - 
+ - InSpec
 
 ### Tools to run code and test the output
- - 
+ - InSpec
 
 ### When to use ChefSpec in the workflow  
- - 
+ - after linting and before Kitchen
 
 ### When to use Test Kitchen in the workflow
- - 
+ - after ChefSpec and before promotion to the Chef server or Supermarket
 
 ### Testing intent
- - 
+ - One should use InSpec to write tests that verify that the desired state was achieved, not necessarily that all of the resources simply converged but that they're functioning in the desired state.
 
 ### Functional vs unit testing
- - 
+ - Functional is basically integration testing which you'd do with InSpec.
+ - Unit testing would be done with ChefSpec.
 
 
 # TROUBLESHOOTING 
@@ -990,23 +1043,28 @@ _Candidates should understand:_
 _Candidates should understand:_
 
 ### Test Kitchen phases and associated output
- - 
-
+ - `kitchen create` to create the vm instance
+ - `kitchen converge` to compile and converge the cookbooks on the vm instance
+ - `kitchen verify` to run the InSpec tests on the instance
+ - `kitchen destroy` to destroy the instance
+ - `kitchen test` to destroy the instance if one exits followed by running through all of the above tests and finishing with another destroy
+ - `kitchen login` to log into the vm instance
+ - `kitchen init` to initialize a new `.kitchen.yml`
 
 ## COMPILE VS. CONVERGE
 _Candidates should understand:_
 
 ### What happens during the compile phase of a chef-client run
- - 
+ - All of the code is run in order to get the resources ready for consumption.
 
 ### What happens during the converge phase of a chef-client run
- - 
+ - All of the resources are executed on the node.
 
 ### When pure Ruby gets executed
- - 
+ - This happens in the compile phase.
 
 ### When Chef code gets executed
- - 
+ - This happens during the converge phase.
 
 
 # SEARCH AND DATABAGS 
