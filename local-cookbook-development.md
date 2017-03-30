@@ -100,6 +100,10 @@ _Candidates should understand:_
    - `ignore_failure` `provider` `retries` `retry_delay` `sensitive` `supports`
  - `execute` actions: `:nothing` `:run`
  - Common `execute` properties: `command` `notifies` `creates` (Prevent a command from creating a file when that file already exists.) `path` `returns`
+ - A notification is a property on a resource that listens to other resources in the resource collection and then takes action(s) based on the notification type (notifies or subscribes).
+   - Timers: `:before` `:delayed` `:immediate` `:immediately`
+   - Notifies: `notifies :action, 'resource[name]', :timer`
+   - Subscribes: `subscribes :action, 'resource[name]', :timer`
 
 ```ruby
 cookbook_file '/var/www/customers/public_html/index.php' do
@@ -199,6 +203,7 @@ _Candidates should understand:_
 
 ### How to use community cookbooks
  - You can either use it from the Supermarket, in which you'd depend on it in metadata, or you can clone it from version control and upload it to the Chef server with berks.
+ - The deprecated way to initialize Berkshelf is to run `berks init`, but now, when you run `chef generate cookbook` you will get a Berkshelf file in the cookbook.
 
 ### How to wrap community cookbooks
  - You would add those cookbooks as dependencies in the metadata and then consume them by either:
@@ -230,6 +235,10 @@ _Candidates should understand:_
    - `shell_out!(command_args)` where command_args is the command that is run against the node. This method will return true or false.
  - The `shell_out_with_systems_locale` method can be used to run a command against the node (via the `shell_out` method), but using the LC_ALL environment variable.
    - `shell_out_with_systems_locale(command_args)` where command_args is the command that is run against the node.
+
+### How to do logging with Chef
+ - use the sensitive [property](https://docs.chef.io/resource_common.html#properties)
+ - [logging in chef](https://docs.chef.io/resource_log.html#chef-log-entries)
 
 ### When/not to shell out
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) As read-only, not to change state
