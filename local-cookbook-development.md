@@ -946,7 +946,7 @@ describe 'scenario'
 
 ### Where ChefSpec tests are stored
  - `spec/unit/recipes`
- 
+
 ## GENERIC TESTING TOPICS
 _Candidates should understand:_
 
@@ -1058,7 +1058,7 @@ _Candidates should understand:_
  - 
 
 ### How to invoke a search from the command line
- - 
+ - `knife search` commands can be use to search the Chef server.
 
 ### How to invoke a search from within a recipe
  - 
