@@ -15,13 +15,10 @@ _Here is a detailed breakdown of each area._
 # COOKBOOK AUTHORING AND SETUP THEORY
 
 ## REPO STRUCTURE - MONOLITHIC VS SINGLE COOKBOOK
-
 _Candidates should understand:_
 
 ### The pros and cons of a single repository per cookbook
-
  - _Cookbooks should not reside in the Chef Repo but rather be pulled in via dependency management tools like Berkshelf. Each cookbook should have its own Git repository, build process, and test suite. Cookbooks should be treated as software projects of their own. The suggested structure is to completely remove the idea of putting Cookbooks in your Chef Repo all together. Every cookbook would be contained within its own Git repository and every cookbook has its own Berksfile._
-
  - From there they suggest creating a build job on a CI server for every cookbook. This job would test and then upload the cookbook it is managing to your Chef Server.
 
 **Pros -**
@@ -49,7 +46,6 @@ Everything needed for your application must be the same version, creating owners
 
 ### How the Chef workflow supports monolithic vs single cookbooks
  - Monolithic: All of your Chef related source code, including any 3rd party dependencies, are tracked in one source control repository using Git. External dependencies, and any local modifications to them, are made with built-in vendor branches, allowing you to easily track the upstream for modifications.
-
  - Single: All of the Chef cookbooks are treated as independent software projects, that can be built in isolation from any other cookbook. External dependencies are fetched as-needed, and treated as artifacts. Changes to the upstream creates a new software projects, and is tracked as such.
 
 ### How to create a repository/workspace on the workstation
@@ -62,10 +58,10 @@ _Candidates should understand:_
  - Cookbooks need versions for running different cookbooks on their different environments.
 
 ### The recommended methods of maintaining versions (e.g. knife spork)
- - `knife spork bump alohaupdate` will automatically update the version number in your metadata if you don't manually change it in the `metadata.rb`.
+ - `knife spork bump <cookbook>` will automatically update the version number in your metadata if you don't manually change it in the `metadata.rb`.
 
 ### How to avoid overwriting cookbooks
- - by Freezing it with the `knife cookbook upload alohaupdate --freeze` or `berks upload` which freezes
+ - by Freezing it with the `knife cookbook upload <cookbook> --freeze` or `berks upload` which freezes
 
 ### Where to define a cookbook version
  - in `metadata.rb`
@@ -169,7 +165,6 @@ _Candidates should understand:_
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) [later overrides earlier](https://docs.chef.io/attributes.html):
    - Attribute -> Recipe -> Environment -> Role
    - Default -> Normal -> Override -> OHAI
-
   - declared in:
     - attribute: `default['attribute'] = value`, `normal['attribute'] = value`, `override['attribute'] = value`
     - cookbook: `node.default['attribute'] = value`, `node.normal['attribute'] = value`, `node.override['attribute'] = value`
@@ -196,7 +191,6 @@ _Candidates should understand:_
    - add the URL of that server as your source to the private supermarket to your Berksfile so that it can look there for the dependent cookbooks and also add it to the knife.rb to upload cookbooks.
    - add all dependencies in the metadata.rb with `depends '<cookbook>' '<version>'`
    - use `knife cookbook site share COOKBOOK_NAME CATEGORY (options)` to upload cookbooks to the supermarket
-
  - Public Supermarket - 
    - add the public supermarket link as your source in the Berksfile
    - add all dependencies in the metadata.rb with `depends '<cookbook>' '<version>'`
@@ -257,7 +251,6 @@ _Candidates should understand:_
 
 ### What the `chef` command does
  - The `chef` command is used for generation and is like the `knife` command. You'd use it in place of `knife` when you use `policyfiles`.
-
  - `chef command [arguments...] [options...]`
 
 ```
@@ -363,7 +356,13 @@ _Candidates should understand:_
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Most of the time it works with `metadata.rb` inclusion, but you can extend it with the `cookbook` line (by including further version pinning and overriding location).
 
 ### How to troubleshoot berks issues
-
+ - https://github.com/berkshelf/berkshelf/wiki/Troubleshooting
+ - `berks test KITCHEN_COMMAND (options)`
+ - `berks show COOKBOOK (options)`
+ - `berks info COOKBOOK (options)`
+ - `berks list (options)`
+ - `berks search QUERY (options)`
+ - `berks verify (options)`
 
 ### How to lock cookbook versions
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) cookbooks are frozen by default with a `berks upload`
@@ -429,8 +428,7 @@ _Candidates should understand:_
  - Running `kitchen test` will ensure your policy applies without error to any new instances
 
 # TEST KITCHEN 
-
- - The basic structure of a .kitchen.yml file is as follows:
+ - The basic structure of a `.kitchen.yml` file is as follows:
 
 ```yaml
 driver:
@@ -515,6 +513,7 @@ provisioner:
   name: chef_zero
   http_proxy: http://10.0.0.1
 ```
+
  - The environment variables `http_proxy`, `https_proxy`, and `ftp_proxy` are honored by Kitchen for proxies. The `client.rb` file is read to look for proxy configuration settings. If `http_proxy`, `https_proxy`, and `ftp_proxy` are specified in the `client.rb` file, the `chef-client` will configure the ENV variable based on these (and related) settings. 
 
 ```ruby
@@ -1221,7 +1220,7 @@ end
  - delete: `knife data bag delete myproduct`
 
 
-## SEARCH
+## [SEARCH](https://docs.chef.io/chef_search.html)
 _Candidates should understand:_
 
 ### What data is indexed and searchable
@@ -1239,7 +1238,7 @@ _Candidates should understand:_
  - `knife search node 'network_interfaces__addresses:192.168*'`
  - `knife search admins 'id:charlie'`
  - `knife search node 'foo:*'`
- - Use the `AND`, `NOT`, or `OR` boolean operators 
+ - Use the `AND`, `NOT`, or `OR` [boolean operators](https://docs.chef.io/chef_search.html#and) 
    - `knife search node 'platform:windows AND roles:jenkins'`
    - `knife search sample "(NOT id:foo)"`
    - `knife search sample "id:foo OR id:abc"`
