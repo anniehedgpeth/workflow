@@ -164,7 +164,7 @@ _Candidates should understand:_
 
 ### Attribute value precedence
  - OHAI will trump all other attributes. Then `override` will trump other attributes in the order of role, environment, node,/recipe, attribute files. Then the default attributes in that same order.
- - OHAI >> Override (R, E, N, A) >> default (R, E, N, A)
+ - OHAI >> Normal (R, E, N, A) >> default (R, E, N, A)
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) [later overrides earlier](https://docs.chef.io/attributes.html):
    - Attribute -> Recipe -> Environment -> Role
    - Default -> Normal -> Override -> OHAI
@@ -692,34 +692,86 @@ _Candidates should understand:_
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) values defined in a file within the attributes directory
 
 ### Attributes as a nested hash
- - 
+ - The following two blocks say the same thing. The second displays the attributes in a nested hash.
+
+```ruby
+default['cookbook_name']['category_name']['key1'] = 'value1'
+default['cookbook_name']['category_name']['key2'] = 'value2'
+default['cookbook_name']['different_category'] = 'other_value'
+```
+
+```ruby
+default['cookbook_name'] = {
+  category_name: {
+    value1: 'value1',
+    value2: 'value2'
+  },
+  different_category: 'other_value'
+}
+```
 
 ### How attributes are defined
- - 
+ - Attributes are defined by:
+   - Attributes file (can be `.json` or `.rb`)
+
+```ruby
+default['cookbook_name']['category_name']['key1'] = 'value1'
+default['cookbook_name']['category_name']['key2'] = 'value2'
+normal['cookbook_name']['different_category'] = 'other_value' # normal overrides the default value
+```
+   - In recipes - 
+
+```ruby
+node.default['cookbook_name']['category_name']['key1'] = 'recipe_value'
+node.normal['cookbook_name']['category_name']['key2'] = 'recipe_value2'
+```
+
+   - Roles & Environments
+
+```ruby
+override_attributes({
+  category_name: {
+    value1: 'new_value1',
+    value2: 'new_value2'
+  }
+})
+default_attributes({
+  category_name: {
+    value1: 'new_value1-a',
+    value2: 'new_value2-b'
+  }
+})
+```
 
 ### How attributes are named
- - 
+ - in a nested tree
 
 ### How attributes are referenced
  - `node[key:value]`
 
 ### Attribute precedence levels
- - 
+ - OHAI >> Normal/Override (Role, Env, Node/recipe, Attribute) >> default (Role, Env, Node/recipe, Attribute)
 
-### What Ohai is
- - 
+### What [Ohai](https://docs.chef.io/ohai.html) is
+ - Ohai is a tool that is used to detect attributes on a node, and then provide these attributes to the chef-client at the start of every chef-client run. Ohai is required by the chef-client and must be present on a node. (Ohai is installed on a node as part of the chef-client install process.)
+ - Attributes that are collected by Ohai are automatic level attributes, in that these attributes are used by the chef-client to ensure that these attributes remain unchanged after the chef-client is done configuring the node.
 
 ### What the 'platform' attribute is
- - 
+ - [Ohai](https://docs.chef.io/ohai.html) collects data for many platforms, including AIX, Darwin, Linux, FreeBSD, OpenBSD, NetBSD, Solaris, and any Microsoft Windows operating system based off the Windows_NT kernel and has access to win32 or win64 sub-systems.
 
-### How to use the 'platform' attribute in recipes
- - 
+### How to use the 'platform' attribute in [recipes](https://docs.chef.io/dsl_recipe.html)
+
+```ruby
+if node['platform'] == 'ubuntu'
+  # do ubuntu things
+end
+```
 
 ## FILES AND TEMPLATES - DIFFERENCE AND HOW THEY WORK, WHEN TO USE EACH
 _Candidates should understand:_
 
 ### How to instantiate files on nodes
- - 
+ - Files can be instantiated by using the 
 
 ### The difference between 'file', 'cookbook_file', 'remote_file', and 'template'
  - 
