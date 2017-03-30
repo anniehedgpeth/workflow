@@ -814,7 +814,12 @@ message = <%= message %>
    - By using the template resource and the variables property
 
 ### Common file-related resource actions and properties
- - 
+ - `file` `cookbook_file` `remote_file` `template` actions: 
+   - `:create` `:create_if_missing` `:delete` `:nothing` `:touch`
+ - Properties common to every resource include:
+   - `ignore_failure` `provider` `retries` `retry_delay` `sensitive` `supports`
+- Common file-related resource properties:
+   - `notifies` `mode` `group` `content` `owner` `subscribes`
 
 ### [ERB syntax](https://docs.puppet.com/puppet/4.9/lang_template_erb.html)
  - Each ERB tag has a beginning tag and a matched ending tag. `<% code %>`
@@ -826,25 +831,31 @@ message = <%= message %>
 _Candidates should understand:_
 
 ### What custom resources are
- - 
+ - A custom resource can either be a hwrp, lwrp, a definition, or a custom resource.
 
 ### How to consume resources specified in another cookbook
- - 
+ -   depend on cookbook, and then use them
 
 ### Naming conventions
- - 
+ - If you do not explicitly name the custom resource then it will be named like `<cookbook>_<filename>`
 
 ### How to test custom resources
- - 
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) by using a wrapper cookbook embedded inside of the cookbook (I usually put it in `test/cookbooks` and then included in the runlist)
 
-## LIBRARIES 
+
+## [LIBRARIES](https://docs.chef.io/libraries.html) 
 _Candidates should understand:_
 
 ### What libraries are and when to use them
- - 
+ - In the same way that the `resources` directory is where you'd store custom resources, you will store ruby code that you want to reuse in the `libraries` directory.
+ - Use a library to:
+   - Create a custom class or module; for example, create a subclass of Chef::Recipe
+   - Connect to a database
+   - Talk to an LDAP provider
+   - Do anything that can be done with Ruby
  
 ### Where libraries are stored
- - 
+ - A library file is a Ruby file that is located within a cookbook’s `/libraries` directory.
 
 # AVAILALABLE TESTING FRAMEWORKS 
 
@@ -852,22 +863,54 @@ _Candidates should understand:_
 _Candidates should understand:_
 
 ### How to test common resources with InSpec
- - 
+ - see below
 
 ### InSpec syntax
- - 
+
+```ruby
+describe bash('command') do
+  it { should exist }
+  its('matcher') { should eq 'output' }
+end
+
+describe file('path') do
+  it { should MATCHER 'value' }
+end
+
+describe http('url', auth: {user: 'user', pass: 'test'}, params: {params}, method: 'method', headers: {headers}, body: body) do
+  its('status') { should eq number }
+  its('body') { should eq 'body' }
+  its('headers.name') { should eq 'header' }
+end
+
+describe os[:family] do
+  it { should eq 'platform_name' }
+end
+```
 
 ### How to write InSpec tests
- - 
+ - see above
 
 ### How to run InSpec tests
- - 
 
-### Where InSpec tests are stored
- - 
+ - After running the tests, you will receive feedback about what was retuned in regard to what was expected.
 
+```ruby
+describe some_resource('/proc/cpuinfo') do
+  its('mode') { should cmp '0345' }
+end
 
-### CHEFSPEC
+expected: 0345
+got: 0444
+```
+
+### [Where InSpec tests are stored](http://www.anniehedgie.com/inspec-basics-6)
+ - locally
+ - Supermarket
+ - git
+ - Chef Compliance Server
+
+## CHEFSPEC
 Candidates should understand:
 
 ### What ChefSpec is
