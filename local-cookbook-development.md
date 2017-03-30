@@ -1225,17 +1225,45 @@ end
 _Candidates should understand:_
 
 ### What data is indexed and searchable
- - 
+ - Search indexes allow queries to be made for any type of data that is indexed by the Chef server, including data bags (and data bag items), environments, nodes, and roles. 
 
 ### Why you would search in a recipe
- - 
+ - There is a lot of information that `chef-client` will not have until it is run, like what kind of node it is on, which environment it is in, what role it has, etc. We can invoke a search to fill in the proper attributes and values to be consumed by the recipe as needed. 
 
 ### Search criteria syntax
- - 
+ - A search query is comprised of two parts: the key and the search pattern. A search query has the following syntax: `key:search_pattern` where `key` is a field name that is found in the JSON description of an indexable object on the Chef server (a role, node, client, environment, or data bag) and `search_pattern` defines what will be searched for, using one of the following search patterns: exact, wildcard, range, or fuzzy matching. 
+ - Both `key` and `search_pattern` are case-sensitive; `key` has limited support for multiple character wildcard matching using an asterisk (“*”) (and as long as it is not the first character).
 
 ### How to invoke a search from the command line
  - `knife search` commands can be use to search the Chef server.
+ - `knife search node 'network_interfaces__addresses:192.168*'`
+ - `knife search admins 'id:charlie'`
+ - `knife search node 'foo:*'`
+ - Use the `AND`, `NOT`, or `OR` boolean operators 
+   - `knife search node 'platform:windows AND roles:jenkins'`
+   - `knife search sample "(NOT id:foo)"`
+   - `knife search sample "id:foo OR id:abc"`
 
 ### How to invoke a search from within a recipe
- - 
+ - `search(:node, "key:attribute")`
+ - `search(:node, 'roles:load_balancer')`
 
+```ruby
+# search node
+search(:node, "*:*").each do |matching_node|
+  puts matching_node.to_s
+end
+```
+
+```ruby
+# search environments
+qa_nodes = search(:node,"chef_environment:QA")
+qa_nodes.each do |qa_node|
+    # Do useful work specific to qa nodes only
+end
+```
+
+```ruby
+# search data bags (see above for more)
+search(:admin_data, "NOT id:admin_users")
+```
