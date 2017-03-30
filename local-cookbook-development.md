@@ -1,4 +1,5 @@
 # LOCAL COOKBOOK DEVELOPMENT BADGE TOPICS
+_This page is for the purpose of studying for this exam. Most of the information found on this page is taken from [docs.chef.io](https://docs.chef.io). 
 
 The Local Cookbook Development badge is awarded when someone proves that they understand the process of developing cookbooks locally. Candidates must show:
 
@@ -914,7 +915,7 @@ got: 0444
 Candidates should understand:
 
 ### What ChefSpec is
- - 
+ - ChefSpec is a framework that tests resources and recipes as part of a simulated chef-client run.
 
 ### The ChefSpec value proposition
  - The benefit of writing tests focused around the Resource Collection will allow us to gain feedback quickly and build a better development workflow.
@@ -1069,38 +1070,155 @@ _Candidates should understand:_
 
 # SEARCH AND DATABAGS 
 
-## DATA BAGS
+## [DATA BAGS](https://docs.chef.io/data_bags.html)
 _Candidates should understand:_
 
 ### What databags are
- - 
+ - A data bag is a global variable that is stored as JSON data and is accessible from a Chef server. 
+ - A data bag is indexed for searching and can be loaded by a recipe or accessed during a search.
+ - A data bag is a container of related data bag items, where each individual data bag item is a JSON file. 
+   - `knife` can load a data bag item by specifying the name of the data bag to which the item belongs and then the filename of the data bag item. 
+   - The only structural requirement of a data bag item is that it must have an id:
+
+```json
+{
+  /* This is a supported comment style */
+  // This style is also supported
+  "id": "ITEM_NAME",
+  "key": "value"
+}
+```
 
 ### Where databags are stored
- - 
+ - A `data_bags` directory is sibling to the `cookbooks` directory in the `chef-repo`. Individual databags are stored `data_bags/BAG_NAME/ITEM_NAME.json`
+   - When the chef-repo is cloned from GitHub, the following occurs:
+     - A directory named data_bags is created.
+     - For each data bag, a sub-directory is created that has the same name as the data bag.
+     - For each data bag item, a JSON file is created and placed in the appropriate sub-directory.
 
-### When to use databags
- - 
+```
+- data_bags
+    -  admins
+        -  charlie.json
+        -  bob.json
+        -  tom.json
+    -  db_users
+        -  charlie.json
+        -  bob.json
+        -  sarah.json
+    -  db_config
+        -  small.json
+        -  medium.json
+        -  large.json
+```
 
-### How to use databags
- - 
+### When to use [databags](https://docs.chef.io/data_bags.html#use-data-bags)
+ - when you want data to be accessed by multiple cookbooks within your Chef server
+   - Values that are stored in a data bag are global to the organization and are available to any environment.
+
+### How to use [databags](https://docs.chef.io/data_bags.html#use-data-bags)
+ - Data bags can be accessed in the following ways:
+   - with **Search**
+     - using knife `knife search admin_data "(NOT id:admin_users)"`
+     - in a recipe `search(:admins, "id:charlie")`
+ 
+   - with **Environments**
+     -  data bag that is storing a top-level key for an environment might look something like this:
+
+```json
+{
+  "id": "some_data_bag_item",
+  "production" : {
+    # Hash with all your data here
+  },
+  "testing" : {
+    # Hash with all your data here
+  }
+}
+```
+     - When using the data bag in a recipe, that data can be accessed from a recipe using code similar to:
+
+```ruby
+bag_item[node.chef_environment]['some_other_key']
+```
+   - with **Recipes**
+     - Loaded by name when using the Recipe DSL. Use this approach when a only single, known data bag item is required.
+       - `data_bag(bag)`, where `bag` is the name of the data bag.
+         - For example, the contents of a data bag item named justin: `data_bag_item('admins', 'justin')` will return something similar to: `# => {'comment'=>'Justin Currie', 'gid'=>1005, 'id'=>'justin', 'uid'=>1005, 'shell'=>'/bin/zsh'}`
+       - `data_bag_item('bag_name', 'item', 'secret')`, where `bag` is the name of the data bag and item is the name of the data bag item. If `'secret'` is not specified, the `chef-client` will look for a secret at the path specified by the `encrypted_data_bag_secret` setting in the `client.rb` file.
+     - Accessed through the search indexes. Use this approach when more than one data bag item is required or when the contents of a data bag are looped through. The search indexes will bulk-load all of the data bag items, which will result in a lower overhead than if each data bag item were loaded by name.
+ 
+   - with **Chef Solo**
+     - chef-solo can load data from a data bag as long as the contents of that data bag are accessible from a directory structure that exists on the same machine as chef-solo. The location of this directory is configurable using the data_bag_path option in the solo.rb file.
 
 ### How to create a databag
- - 
+ - A data bag can be created in two ways: using `knife` or manually. In general, using knife to create data bags is recommended, but as long as the data bag folders and data bag item JSON files are created correctly, either method is safe and effective.
+   - `knife data bag create DATA_BAG_NAME (DATA_BAG_ITEM)`
+   - `knife data bag from file BAG_NAME ITEM_NAME.json`
+     - This will load the following file: `data_bags/BAG_NAME/ITEM_NAME.json`
 
 ### How to update a databag
- - 
+ - A data bag can be edited in two ways: 
+   - using `knife` 
+     - `knife data bag edit BAG_NAME ITEM_NAME` will open the $EDITOR
+     - Once opened, you can update the data before saving it to the Chef server.
+     - (You can also just edit it in your own editor, then `knife data bag from file BAG_NAME ITEM_NAME.json` again.)
+   - using the Chef management console (the Chef server UI on manage.chef.io)
+       - Click Policy.
+       - Click Data Bags.
+       - Select a data bag.
+       - Select the Items tab.
+       - Select a data bag.
+       - Click Edit.
 
 ### How to search databags
- - 
+ - A data bag is a global variable that is stored as JSON data and is accessible from a Chef server. 
+ - A data bag is indexed for searching and can be loaded by a recipe or accessed during a search.
 
-### Chef Vault
- - 
+```ruby
+search(:admins, "*:*")
+```
+
+```ruby
+search(:admins, "id:charlie")
+```
+
+```ruby
+search(:admins, "id:c*")
+```
+
+```ruby
+admins = data_bag('admins')
+
+admins.each do |login|
+  admin = data_bag_item('admins', login)
+  home = "/home/#{login}"
+
+  user(login) do
+    uid       admin['uid']
+    gid       admin['gid']
+    shell     admin['shell']
+    comment   admin['comment']
+    home      home
+    manage_home true
+  end
+
+end
+```
+
+### [Chef Vault](https://docs.chef.io/chef_vault.html)
+ - Chef Vault is similar to encryped databags except that it provides two layers of encryption instead of just one.
+ - chef-vault allows the encryption of a data bag item by using the public keys of a list of nodes, allowing only those nodes to decrypt the encrypted values. `chef-vault` adds the `knife vault` subcommand.
+   - The chef-vault cookbook is maintained by Chef. Use it along with chef-vault itself. This cookbook adds the `chef_vault_item` helper method to the Recipe DSL and the `chef_vault_secret` resource. Use them both in recipes to work with data bag secrets.
 
 ### The difference between databags and attributes
- - 
+ - Databags have no precedence and are cookbook independent.
 
-### What 'knife' commands to use to CRUD databags
- - 
+### What `knife` commands to use to CRUD databags
+ - create: `knife data bag create myproduct`
+ - read: `knife data bag show myproduct values`
+ - update: either `knife data bag edit myproduct values` or `knife data bag from file myproduct values.json` (preferred)
+ - delete: `knife data bag delete myproduct`
 
 
 ## SEARCH
