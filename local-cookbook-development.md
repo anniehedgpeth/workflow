@@ -98,6 +98,7 @@ _Candidates should understand:_
    - `:create` `:create_if_missing` `:delete` `:nothing` `:touch`
  - Properties common to every resource include:
    - `ignore_failure` `provider` `retries` `retry_delay` `sensitive` `supports`
+   - [`sensitive`](https://docs.chef.io/resource_common.html#properties) Ensure that sensitive resource data is not logged by the chef-client. Default value: false. This property only applies to the `execute`, `file` and `template` resources.
  - `execute` actions: `:nothing` `:run`
  - Common `execute` properties: `command` `notifies` `creates` (Prevent a command from creating a file when that file already exists.) `path` `returns`
  - A notification is a property on a resource that listens to other resources in the resource collection and then takes action(s) based on the notification type (notifies or subscribes).
@@ -124,7 +125,9 @@ _Candidates should understand:_
 
 ### Cookbook dependency version syntax
  - Inside of `metadata.rb` put `depends '<cookbook>'` or for a version constraint, `depends '<cookbook>', '> 2.0'`
-   - The operators are `=, >=, >, <, <=, and ~>`. That last operator `~>` will go up to the next biggest version.
+   - The operators are `=, >=, >, <, <=, and ~>`. 
+     - That last operator `~>` will go up to the next biggest version.
+     - `>= 2.2.0, < 3.0` == `~>2.2`
 
 ### What information to include in a cookbook - author, license, etc
 **Metadata settings**
@@ -236,9 +239,17 @@ _Candidates should understand:_
  - The `shell_out_with_systems_locale` method can be used to run a command against the node (via the `shell_out` method), but using the LC_ALL environment variable.
    - `shell_out_with_systems_locale(command_args)` where command_args is the command that is run against the node.
 
-### How to do logging with Chef
- - use the sensitive [property](https://docs.chef.io/resource_common.html#properties)
- - [logging in chef](https://docs.chef.io/resource_log.html#chef-log-entries)
+### How to do [logging](https://docs.chef.io/resource_log.html#chef-log-entries) with Chef
+ - Set the [sensitive property](https://docs.chef.io/resource_common.html#properties) to `true` to keep your sensitive data from being shown in the logs.
+
+```ruby
+unless node['splunk']['upgrade_enabled']
+  Chef::Log.fatal('The chef-splunk::upgrade recipe was added to the node,')
+  Chef::Log.fatal('but the attribute `node["splunk"]["upgrade_enabled"]` was not set.')
+  Chef::Log.fatal('I am bailing here so this node does not upgrade.')
+  raise
+end
+```
 
 ### When/not to shell out
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) As read-only, not to change state
@@ -335,17 +346,17 @@ _Candidates should understand:_
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) They all start with `FC001`; you can google that to get to the exact rule.
 
 ### Community coding rules & custom rules
+ - Various nice people in the Chef community have also written extra rules for foodcritic that you can install and run. Or write your own!
+   - [Custom Customink Rules](https://github.com/customink-webops/foodcritic-rules/blob/master/rules.rb)
+   - [Custom Etsy Rules](https://github.com/etsy/foodcritic-rules)
 
 ### Foodcritic commands
  - `foodcritic /path/to/cookbook`
- - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Just run `foodcritic .` to do a scan from the cookbook folder. Add `--epic-fail` to make it fail when foodcritic fails.
+ - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) Just run `foodcritic .` to do a scan from the cookbook folder. Add `--epic-fail` to make the command fail when foodcritic fails (to cause your build to fail).
  - A Foodcritic evaluation has the following syntax: `RULENUMBER: MESSAGE: FILEPATH:LINENUMBER`
 
 ### [Foodcritic rules](http://www.foodcritic.io/)
  - It comes with 60 built-in rules that identify problems ranging from simple style inconsistencies to difficult to diagnose issues that will hurt in production. 
- - Various nice people in the Chef community have also written extra rules for foodcritic that you can install and run. Or write your own!
-   - [Custom Customink Rules](https://github.com/customink-webops/foodcritic-rules/blob/master/rules.rb)
-   - [Custom Etsy Rules](https://github.com/etsy/foodcritic-rules)
 
 ### How to exclude Foodcritic rules
  - `foodcritic . --tags ~RULE`
@@ -406,7 +417,7 @@ _Candidates should understand:_
  - [MH:](https://github.com/mhedgpeth/mhedgpeth.github.io/blob/master/_drafts/local-cookbook-development-notes.md) `-a` or `--auto-correct` to auto-correct offenses
 
 ### How to be selective about the rules you run
- - Each cookbook has its own `.rubocop.yml` file, which means that each cookbook may have its own set of enabled, disabled, and custom rules. That said, it’s more common for all cookbooks to have the same set of enabled, disabled, and custom rules. When RuboCop is run against a cookbook, the full set of enabled and disabled rules (as defined the `enabled.yml` and `disabled.yml` files in RuboCop itself) are loaded first, and are then compared against the settings in the cookbook’s `.rubocop.yml` file.
+ - Each cookbook has its own `.rubocop.yml` file, which means that each cookbook may have its own set of enabled, disabled, and custom rules. That said, it’s more common for all cookbooks to have the same set of enabled, disabled, and custom rules. When RuboCop is run against a cookbook, the full set of enabled and disabled rules (as defined in the `enabled.yml` and `disabled.yml` files in RuboCop itself) are loaded first and are then compared against the settings in the cookbook’s `.rubocop.yml` file.
 
 ```ruby
 NAME_OF_RULE:
@@ -508,6 +519,37 @@ _Candidates should understand:_
      - `kitchen-pester` A driver for Pester, a testing framework for Microsoft Windows.
      - `kitchen-rackspace` A driver for Rackspace.
      - `kitchen-vagrant` A driver for Vagrant. The default driver packaged with the Chef development kit.
+   - How to customize a driver:
+
+```yaml
+---
+driver:
+  customize:
+    memory: 1024
+    cpuexecutioncap: 50
+```
+
+```yaml
+driver:
+  customize:
+    createhd:
+      filename: /tmp/disk1.vmdk
+      size: 1024
+    storageattach:
+      storagectl: SATA Controller
+      port: 1
+      device: 0
+      type: hdd
+      medium: /tmp/disk1.vmdk
+```
+
+```yaml
+---
+driver:
+  network:
+    - ["forwarded_port", {guest: 80, host: 8080}]
+    - ["private_network", {ip: "192.168.33.33"}]
+```
 
 ## PROVISIONER
 _Candidates should understand:_
@@ -541,6 +583,7 @@ http_proxy_pass 'Password1'
  
 ### How to use the [shell provisioner](https://www.morethanseven.net/2014/01/12/shell-provisioner-for-test-kitchen/)  
  - to run a command during a converge
+ - `provisioner: shell`
  - The shell provisioner is going to look for a file called `bootstrap.sh` by default.
    - In this case our script is completely self contained but if it needed some additional files we could put them in a directory called data and they would be copied to the newly created virtual machine under `/tmp/kitchen`.
 
@@ -646,8 +689,9 @@ _Candidates should understand:_
  - when you run `kitchen verify`
 
 ### How to install [bussers](https://docs.chef.io/kitchen.html#busser) 
- - Busser is a test setup and execution framework that is designed to work on remote nodes whose system dependencies cannot be relied upon. 
+ - Busser is a test setup and execution framework that is designed to work on remote nodes upon whose system dependencies cannot be relied. 
    - Kitchen uses Busser to run post-convergence tests via a plugin architecture that supports different test frameworks. Busser is installed automatically as part of Kitchen.
+   - InSpec is the busser that is being used, but you could choose a different busser (but why would you?).
 
 ### What 'kitchen init' does
  - `kitchen init` to initialize a new `.kitchen.yml`
@@ -1260,6 +1304,13 @@ _Candidates should understand:_
 # search node
 search(:node, "*:*").each do |matching_node|
   puts matching_node.to_s
+end
+```
+
+```ruby
+search(:node, 'platform:ubuntu AND name:CHEF*').each |matching_node|
+  puts matching_node['ipaddress']
+  puts matching_node['name']
 end
 ```
 
